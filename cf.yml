@@ -16,7 +16,7 @@ Parameters:
     Type: String
     Description: "Running: A spot instance will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
     Default: Running
-    AllowedValues: 
+    AllowedValues:
     - Running
     - Stopped
 
@@ -66,10 +66,20 @@ Parameters:
     - true
     - false
 
+  ExistingVpcId:
+    Type: String
+    Description: ID of an existing VPC (leave blank to create a new VPC)
+    Default: ''
+
+  ExistingSubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: List of existing Subnet IDs (leave blank to create new subnets)
+    Default: ''
+
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
-      - Label: 
+      - Label:
           default: Essential Configuration
         Parameters:
         - FactorioImageTag
@@ -78,12 +88,12 @@ Metadata:
         - SpotPrice
         - EnableRcon
         - UpdateModsOnStart
-      - Label: 
+      - Label:
           default: Remote Access (SSH) Configuration (Optional)
         Parameters:
         - KeyPairName
         - YourIp
-      - Label: 
+      - Label:
           default: DNS Configuration (Optional)
         Parameters:
         - HostedZoneId
@@ -115,6 +125,9 @@ Conditions:
   DnsConfigEnabled: !And [ !Not [ !Equals [ !Ref HostedZoneId, '' ] ], !Not [ !Equals [ !Ref RecordName, '' ] ] ]
   SpotPriceProvided: !Not [ !Equals [ !Ref SpotPrice, '' ] ]
   DoEnableRcon: !Equals [ !Ref EnableRcon, 'true' ]
+  UseExistingVpc: !Not [!Equals [!Ref ExistingVpcId, '']]
+  UseExistingSubnets: !Not [!Equals [!Join ['', !Ref ExistingSubnetIds], '']]
+  CreateNewVpc: !Equals [!Ref ExistingVpcId, '']
 
 Mappings:
   ServerState:
@@ -129,63 +142,66 @@ Resources:
   # BASIC VPC
   # ====================================================
 
-  Vpc: 
+  Vpc:
     Type: AWS::EC2::VPC
-    Properties: 
+    Condition: CreateNewVpc
+    Properties:
       CidrBlock: 10.100.0.0/26
       EnableDnsSupport: true
       EnableDnsHostnames: true
 
   SubnetA:
     Type: AWS::EC2::Subnet
+    Condition: CreateNewVpc
     Properties:
-      AvailabilityZone: !Select 
-      - 0
-      - !GetAZs 
-        Ref: 'AWS::Region'
-      CidrBlock: !Select [ 0, !Cidr [ 10.100.0.0/26, 4, 4 ] ]
-      VpcId: !Ref Vpc  
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: !Select [0, !Cidr [!GetAtt Vpc.CidrBlock, 4, 4]]
+      VpcId: !Ref Vpc
+      MapPublicIpOnLaunch: true
+
+  SubnetB:
+    Type: AWS::EC2::Subnet
+    Condition: CreateNewVpc
+    Properties:
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: !Select [1, !Cidr [!GetAtt Vpc.CidrBlock, 4, 4]]
+      VpcId: !Ref Vpc
+      MapPublicIpOnLaunch: true
 
   SubnetARoute:
     Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties: 
+    Properties:
       RouteTableId: !Ref RouteTable
       SubnetId: !Ref SubnetA
 
   SubnetBRoute:
     Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties: 
-      RouteTableId: !Ref RouteTable
-      SubnetId: !Ref SubnetB  
-
-  SubnetB:
-    Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: !Select 
-      - 1
-      - !GetAZs 
-        Ref: 'AWS::Region'
-      CidrBlock: !Select [ 1, !Cidr [ 10.100.0.0/26, 4, 4 ] ]
-      VpcId: !Ref Vpc
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref SubnetB
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
+    Condition: CreateNewVpc
     Properties: {}
 
   InternetGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
-    Properties: 
+    Condition: CreateNewVpc
+    Properties:
       InternetGatewayId: !Ref InternetGateway
       VpcId: !Ref Vpc
 
   RouteTable:
     Type: AWS::EC2::RouteTable
-    Properties: 
-      VpcId: !Ref Vpc    
+    Condition: CreateNewVpc
+    Properties:
+      VpcId: !Ref Vpc
 
   Route:
     Type: AWS::EC2::Route
-    Properties: 
+    Condition: CreateNewVpc
+    Properties:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
       RouteTableId: !Ref RouteTable
@@ -208,7 +224,10 @@ Resources:
       FileSystemId: !Ref Efs
       SecurityGroups:
       - !Ref EfsSg
-      SubnetId: !Ref SubnetA
+      SubnetId: !If
+        - UseExistingSubnets
+        - !Select [0, !Ref ExistingSubnetIds]
+        - !Ref SubnetA
 
   MountB:
     Type: AWS::EFS::MountTarget
@@ -216,11 +235,14 @@ Resources:
       FileSystemId: !Ref Efs
       SecurityGroups:
       - !Ref EfsSg
-      SubnetId: !Ref SubnetB
+      SubnetId: !If
+        - UseExistingSubnets
+        - !Select [1, !Ref ExistingSubnetIds]
+        - !Ref SubnetB
 
   EfsSg:
     Type: AWS::EC2::SecurityGroup
-    Properties: 
+    Properties:
       GroupName: !Sub "${AWS::StackName}-efs"
       GroupDescription: !Sub "${AWS::StackName}-efs"
       SecurityGroupIngress:
@@ -228,20 +250,20 @@ Resources:
         ToPort: 2049
         IpProtocol: tcp
         SourceSecurityGroupId: !Ref Ec2Sg
-      VpcId: !Ref Vpc
-      
+      VpcId: !If [UseExistingVpc, !Ref ExistingVpcId, !Ref Vpc]
+
   # ====================================================
   # INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg:
     Type: AWS::EC2::SecurityGroup
-    Properties: 
+    Properties:
       GroupName: !Sub "${AWS::StackName}-ec2"
       GroupDescription: !Sub "${AWS::StackName}-ec2"
       SecurityGroupIngress:
       - !If
-        - IpAddressProvided 
+        - IpAddressProvided
         - FromPort: 22
           ToPort: 22
           IpProtocol: tcp
@@ -258,7 +280,7 @@ Resources:
           IpProtocol: tcp
           CidrIp: 0.0.0.0/0
         - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
+      VpcId: !If [UseExistingVpc, !Ref ExistingVpcId, !Ref Vpc]
 
   LaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -267,7 +289,7 @@ Resources:
       IamInstanceProfile: !Ref InstanceProfile
       ImageId: !Ref ECSAMI
       InstanceType: !Ref InstanceType
-      KeyName: 
+      KeyName:
         !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
       SecurityGroups:
       - !Ref Ec2Sg
@@ -275,7 +297,7 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
-          echo ECS_CLUSTER=${EcsCluster} >> /etc/ecs/ecs.config          
+          echo ECS_CLUSTER=${EcsCluster} >> /etc/ecs/ecs.config
 
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -285,13 +307,14 @@ Resources:
       LaunchConfigurationName: !Ref LaunchConfiguration
       MaxSize: !FindInMap [ ServerState, !Ref ServerState, DesiredCapacity ]
       MinSize: !FindInMap [ ServerState, !Ref ServerState, DesiredCapacity ]
-      VPCZoneIdentifier:
-        - !Ref SubnetA
-        - !Ref SubnetB
+      VPCZoneIdentifier: !If
+        - UseExistingSubnets
+        - !Ref ExistingSubnetIds
+        - [!Ref SubnetA, !Ref SubnetB]
 
   InstanceRole:
     Type: AWS::IAM::Role
-    Properties: 
+    Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -305,16 +328,16 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
       Policies:
         - PolicyName: root
-          PolicyDocument: 
+          PolicyDocument:
             Version: "2012-10-17"
-            Statement: 
+            Statement:
               - Effect: "Allow"
                 Action: "route53:*"
                 Resource: "*"
 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
-    Properties: 
+    Properties:
       Roles:
         - !Ref InstanceRole
 
@@ -325,11 +348,11 @@ Resources:
 
   EcsService:
     Type: AWS::ECS::Service
-    Properties: 
+    Properties:
       Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service"
-      TaskDefinition: !Ref EcsTask  
+      TaskDefinition: !Ref EcsTask
       DeploymentConfiguration:
         MaximumPercent: 100
         MinimumHealthyPercent: 0
@@ -339,7 +362,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
-    Properties: 
+    Properties:
       Volumes:
       - Name: factorio
         EFSVolumeConfiguration:
@@ -371,7 +394,7 @@ Resources:
   SetDNSRecordLambdaRole:
     Type: AWS::IAM::Role
     Condition: DnsConfigEnabled
-    Properties: 
+    Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -385,9 +408,9 @@ Resources:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
         - PolicyName: root
-          PolicyDocument: 
+          PolicyDocument:
             Version: "2012-10-17"
-            Statement: 
+            Statement:
               - Effect: "Allow"
                 Action: "route53:*"
                 Resource: "*"
@@ -398,7 +421,7 @@ Resources:
   SetDNSRecordLambda:
     Type: "AWS::Lambda::Function"
     Condition: DnsConfigEnabled
-    Properties: 
+    Properties:
       Environment:
         Variables:
           HostedZoneId: !Ref HostedZoneId
@@ -440,7 +463,7 @@ Resources:
   LaunchEvent:
     Type: AWS::Events::Rule
     Condition: DnsConfigEnabled
-    Properties: 
+    Properties:
       EventPattern:
         source:
         - aws.autoscaling
@@ -458,7 +481,7 @@ Resources:
   LaunchEventLambdaPermission:
     Type: AWS::Lambda::Permission
     Condition: DnsConfigEnabled
-    Properties: 
+    Properties:
       Action: lambda:InvokeFunction
       FunctionName: !GetAtt SetDNSRecordLambda.Arn
       Principal: events.amazonaws.com
