@@ -40,8 +40,7 @@ The other stacks are:
 * 5 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/5-servers/cf.yml)
 * 10 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/10-servers/cf.yml)
 * 20 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/20-servers/cf.yml)
-* 40 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/40-servers/cf.yml)
-* 60 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/60-servers/cf.yml)
+* 50 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/50-servers/cf.yml)
 
 ## On Demand vs Spot
 
