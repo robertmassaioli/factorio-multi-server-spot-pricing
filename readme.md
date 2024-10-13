@@ -22,26 +22,26 @@ A few notes on the services we're using...
 * **Auto Scaling** - Each Auto Scaling Group is used to maintain a single factorio instance via spot pricing.
 * **VPC** - The template deploys a very basic VPC, purely for use by the Factorio servers. This doesn't cost you a cent.
 
-## Getting Started
-
-## Multi Server (Recommended)
+## Getting Started with Multi Server Factorio
 
 Because you might like to start different games, or have one for friends and one for your personal use, we recommend that you spin up a single multi-server instance. After all, you only pay for what you use so setting up a 20-server stack and then only using one server will (currently) cost the same as a 1-server stack. For this example, we will setup the 20-server stack:
 
-1. Navigate to the CloudFormation Stack Creation screen: https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio
-2. Ensure you've selected a suitable AWS Region (closest to you) via the selector at the top right.
-3. Select the "Upload a template file" option and select the `templates/20-servers/cf.yml` file from this repository (that you have downloaded to your machine). You may choose a larger or smaller number of servers if you wish.
-3. Click Next to proceed through the CloudFormation deployment, provide parameters on the following page. You'll need a Key Pair and your Public IP address if you want to access the instance remotely via SSH (recommended). Refer to the Remote Access section below. There should be no need to touch any other parameters unless you have reason to do so. Continue through the rest of the deployment. 
+[![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/20-servers/cf.yml)
+
+1. Click the above link, you'll need to log into your AWS account if you haven't already.
+1. Ensure you've selected a suitable AWS Region (closest to you) via the selector at the top right.
+1. Click Next to proceed through the CloudFormation deployment, provide parameters on the following page. You'll need a Key Pair and your Public IP address if you want to access the instance remotely via SSH (recommended). Refer to the Remote Access section below. There should be no need to touch any other parameters unless you have reason to do so. Continue through the rest of the deployment. 
 
 Inside each of the servers directory you will find a bash script that makes it very easy to manage your factorio servers from the CLI (it will even automatically update the Public IP etc). We strongly recommend that you download that, log into the AWS CLI and use that script for further operations instead of labouring with the Cloud Formation CLI.
 
-## Single Server (Not Recommended)
+The other stacks are:
 
-[![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://s3.amazonaws.com/factorio-spot-pricing/cf.yml)
-
-1. Click the above link, you'll need to log into your AWS account if you haven't already.
-2. Ensure you've selected a suitable AWS Region (closest to you) via the selector at the top right.
-3. Click Next to proceed through the CloudFormation deployment, provide parameters on the following page. You'll need a Key Pair and your Public IP address if you want to access the instance remotely via SSH (recommended). Refer to the Remote Access section below. There should be no need to touch any other parameters unless you have reason to do so. Continue through the rest of the deployment. 
+* 1 Server: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/1-server/cf.yml)
+* 5 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/5-servers/cf.yml)
+* 10 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/10-servers/cf.yml)
+* 20 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/20-servers/cf.yml)
+* 40 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/40-servers/cf.yml)
+* 60 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/60-servers/cf.yml)
 
 ## On Demand vs Spot
 
