@@ -42,6 +42,10 @@ The other stacks are:
 * 20 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/20-servers/cf.yml)
 * 40 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/40-servers/cf.yml)
 
+Note: Why not 100 servers?
+
+At this point we hit a limit with AWS Cloudformation templates that they can't have more than 500 resources. If you find a way for this template to need less than 500 resources then we may be able to get the numbers down and have more server instances. Even with that, you probably won't be able to go past 100 servers in the one VPC with the current configuration due to public IPV4 restrictions.
+
 ## On Demand vs Spot
 
 You may switch between On Demand / Spot via the InstancePurchaseMode CloudFormation parameter. When using Spot, it is not necessary to specify an InstanceType. Simply adjust the SpotMinMemoryMiB and SpotMinVCPUCount to specify how much Memory and CPU you would like on your instance. AWS will find you the cheapest spot instance available below the SpotPrice that you have specified. Should you wish to use a specific instance, you can specify it via the InstanceType parameter. If you are using "On Demand", you *must* specify the InstanceType.
