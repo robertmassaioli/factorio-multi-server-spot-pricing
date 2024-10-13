@@ -97,20 +97,6 @@ Your server needs to be running for this to work and it should download your lat
 
 ##### Manual upload process (for understanding the system)
 
-##### Automated Method (Recommended)
-
-If you wish to upload your save file, just use the bash script at `util/upload-save.bash` AFTER your particular server is up and running and reporting green in ECS and EC2.
-
-It should be as simple as:
-
-```bash
-bash upload-save.bash path_to_MySave.zip ec2_address
-```
-
-The ec2_address will either be the IP address of your instance or the RouteName of your server if you have set one up.
-
-##### Manual Method (Obsolete)
-
 This procedure involves uploading your new save and then force killing the docker container. When the container is force killed it won't auto save, and the default logic is that on restart, the latest save will be loaded. To do this you must have SSH enabled via the CloudFormation deployment. The container must be running, otherwise you can't access EFS (where the save resides) from the EC2 instance. 
 
 1. From your computer, upload your save to the EC2 instance.
