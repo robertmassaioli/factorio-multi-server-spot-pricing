@@ -86,7 +86,7 @@ cat <<VARIABLE_PARAMETERS
   ServerState${i}:
     Type: String
     Description: "Running: A spot instance for Server ${i} will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -342,9 +342,9 @@ Resources:
   MountB:
     Type: AWS::EFS::MountTarget
     Properties:
-      FileSystemId: !Ref Efs${i}
+      FileSystemId: !Ref Efs
       SecurityGroups:
-      - !Ref EfsSg${i}
+      - !Ref EfsSg
       SubnetId: !Ref SubnetB
 
   EfsSg:

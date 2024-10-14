@@ -1431,6 +1431,244 @@ Parameters:
     Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 80 starts, supply the name of the record here (e.g. factorio.mydomain.com).
     Default: ''
 
+  # ====================================================
+  # 81 - Server Specific Variables
+  # ====================================================
+
+  ServerState81:
+    Type: String
+    Description: "Running: A spot instance for Server 81 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName81:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 81 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 82 - Server Specific Variables
+  # ====================================================
+
+  ServerState82:
+    Type: String
+    Description: "Running: A spot instance for Server 82 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName82:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 82 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 83 - Server Specific Variables
+  # ====================================================
+
+  ServerState83:
+    Type: String
+    Description: "Running: A spot instance for Server 83 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName83:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 83 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 84 - Server Specific Variables
+  # ====================================================
+
+  ServerState84:
+    Type: String
+    Description: "Running: A spot instance for Server 84 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName84:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 84 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 85 - Server Specific Variables
+  # ====================================================
+
+  ServerState85:
+    Type: String
+    Description: "Running: A spot instance for Server 85 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName85:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 85 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 86 - Server Specific Variables
+  # ====================================================
+
+  ServerState86:
+    Type: String
+    Description: "Running: A spot instance for Server 86 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName86:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 86 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 87 - Server Specific Variables
+  # ====================================================
+
+  ServerState87:
+    Type: String
+    Description: "Running: A spot instance for Server 87 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName87:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 87 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 88 - Server Specific Variables
+  # ====================================================
+
+  ServerState88:
+    Type: String
+    Description: "Running: A spot instance for Server 88 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName88:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 88 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 89 - Server Specific Variables
+  # ====================================================
+
+  ServerState89:
+    Type: String
+    Description: "Running: A spot instance for Server 89 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName89:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 89 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 90 - Server Specific Variables
+  # ====================================================
+
+  ServerState90:
+    Type: String
+    Description: "Running: A spot instance for Server 90 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName90:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 90 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 91 - Server Specific Variables
+  # ====================================================
+
+  ServerState91:
+    Type: String
+    Description: "Running: A spot instance for Server 91 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName91:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 91 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 92 - Server Specific Variables
+  # ====================================================
+
+  ServerState92:
+    Type: String
+    Description: "Running: A spot instance for Server 92 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName92:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 92 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 93 - Server Specific Variables
+  # ====================================================
+
+  ServerState93:
+    Type: String
+    Description: "Running: A spot instance for Server 93 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName93:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 93 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
+  # ====================================================
+  # 94 - Server Specific Variables
+  # ====================================================
+
+  ServerState94:
+    Type: String
+    Description: "Running: A spot instance for Server 94 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
+    Default: Stopped
+    AllowedValues:
+    - Running
+    - Stopped
+
+  RecordName94:
+    Type: String
+    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 94 starts, supply the name of the record here (e.g. factorio.mydomain.com).
+    Default: ''
+
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -1520,6 +1758,20 @@ Metadata:
         - ServerState78
         - ServerState79
         - ServerState80
+        - ServerState81
+        - ServerState82
+        - ServerState83
+        - ServerState84
+        - ServerState85
+        - ServerState86
+        - ServerState87
+        - ServerState88
+        - ServerState89
+        - ServerState90
+        - ServerState91
+        - ServerState92
+        - ServerState93
+        - ServerState94
       - Label:
           default: Instance Configuration
         Parameters:
@@ -1617,6 +1869,20 @@ Metadata:
         - RecordName78
         - RecordName79
         - RecordName80
+        - RecordName81
+        - RecordName82
+        - RecordName83
+        - RecordName84
+        - RecordName85
+        - RecordName86
+        - RecordName87
+        - RecordName88
+        - RecordName89
+        - RecordName90
+        - RecordName91
+        - RecordName92
+        - RecordName93
+        - RecordName94
     ParameterLabels:
       FactorioImageTag:
         default: "Which version of Factorio do you want to launch?"
@@ -1952,6 +2218,62 @@ Metadata:
         default: "Update this parameter to shut down / start up your Factorio server 80 as required to save on cost. Takes a few minutes to take effect."
       RecordName80:
         default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 80 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState81:
+        default: "Update this parameter to shut down / start up your Factorio server 81 as required to save on cost. Takes a few minutes to take effect."
+      RecordName81:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 81 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState82:
+        default: "Update this parameter to shut down / start up your Factorio server 82 as required to save on cost. Takes a few minutes to take effect."
+      RecordName82:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 82 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState83:
+        default: "Update this parameter to shut down / start up your Factorio server 83 as required to save on cost. Takes a few minutes to take effect."
+      RecordName83:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 83 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState84:
+        default: "Update this parameter to shut down / start up your Factorio server 84 as required to save on cost. Takes a few minutes to take effect."
+      RecordName84:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 84 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState85:
+        default: "Update this parameter to shut down / start up your Factorio server 85 as required to save on cost. Takes a few minutes to take effect."
+      RecordName85:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 85 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState86:
+        default: "Update this parameter to shut down / start up your Factorio server 86 as required to save on cost. Takes a few minutes to take effect."
+      RecordName86:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 86 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState87:
+        default: "Update this parameter to shut down / start up your Factorio server 87 as required to save on cost. Takes a few minutes to take effect."
+      RecordName87:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 87 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState88:
+        default: "Update this parameter to shut down / start up your Factorio server 88 as required to save on cost. Takes a few minutes to take effect."
+      RecordName88:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 88 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState89:
+        default: "Update this parameter to shut down / start up your Factorio server 89 as required to save on cost. Takes a few minutes to take effect."
+      RecordName89:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 89 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState90:
+        default: "Update this parameter to shut down / start up your Factorio server 90 as required to save on cost. Takes a few minutes to take effect."
+      RecordName90:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 90 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState91:
+        default: "Update this parameter to shut down / start up your Factorio server 91 as required to save on cost. Takes a few minutes to take effect."
+      RecordName91:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 91 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState92:
+        default: "Update this parameter to shut down / start up your Factorio server 92 as required to save on cost. Takes a few minutes to take effect."
+      RecordName92:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 92 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState93:
+        default: "Update this parameter to shut down / start up your Factorio server 93 as required to save on cost. Takes a few minutes to take effect."
+      RecordName93:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 93 starts, supply a record name here (e.g. factorio.mydomain.com)."
+      ServerState94:
+        default: "Update this parameter to shut down / start up your Factorio server 94 as required to save on cost. Takes a few minutes to take effect."
+      RecordName94:
+        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 94 starts, supply a record name here (e.g. factorio.mydomain.com)."
 Conditions:
   KeyPairNameProvided: !Not [ !Equals [ !Ref KeyPairName, '' ] ]
   IpAddressProvided: !Not [ !Equals [ !Ref YourIp, '' ] ]
@@ -2169,7 +2491,7 @@ Resources:
     Properties:
       ClusterName: !Sub "${AWS::StackName}-cluster"
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup1:
@@ -2246,7 +2568,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup2:
@@ -2323,7 +2645,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup3:
@@ -2400,7 +2722,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup4:
@@ -2477,7 +2799,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup5:
@@ -2554,7 +2876,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup6:
@@ -2631,7 +2953,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup7:
@@ -2708,7 +3030,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup8:
@@ -2785,7 +3107,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup9:
@@ -2862,7 +3184,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup10:
@@ -2939,7 +3261,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup11:
@@ -3016,7 +3338,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup12:
@@ -3093,7 +3415,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup13:
@@ -3170,7 +3492,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup14:
@@ -3247,7 +3569,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup15:
@@ -3324,7 +3646,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup16:
@@ -3401,7 +3723,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup17:
@@ -3478,7 +3800,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup18:
@@ -3555,7 +3877,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup19:
@@ -3632,7 +3954,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup20:
@@ -3709,7 +4031,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup21:
@@ -3786,7 +4108,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup22:
@@ -3863,7 +4185,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup23:
@@ -3940,7 +4262,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup24:
@@ -4017,7 +4339,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup25:
@@ -4094,7 +4416,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup26:
@@ -4171,7 +4493,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup27:
@@ -4248,7 +4570,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup28:
@@ -4325,7 +4647,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup29:
@@ -4402,7 +4724,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup30:
@@ -4479,7 +4801,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup31:
@@ -4556,7 +4878,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup32:
@@ -4633,7 +4955,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup33:
@@ -4710,7 +5032,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup34:
@@ -4787,7 +5109,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup35:
@@ -4864,7 +5186,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup36:
@@ -4941,7 +5263,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup37:
@@ -5018,7 +5340,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup38:
@@ -5095,7 +5417,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup39:
@@ -5172,7 +5494,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup40:
@@ -5249,7 +5571,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup41:
@@ -5326,7 +5648,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup42:
@@ -5403,7 +5725,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup43:
@@ -5480,7 +5802,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup44:
@@ -5557,7 +5879,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup45:
@@ -5634,7 +5956,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup46:
@@ -5711,7 +6033,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup47:
@@ -5788,7 +6110,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup48:
@@ -5865,7 +6187,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup49:
@@ -5942,7 +6264,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup50:
@@ -6019,7 +6341,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup51:
@@ -6096,7 +6418,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup52:
@@ -6173,7 +6495,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup53:
@@ -6250,7 +6572,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup54:
@@ -6327,7 +6649,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup55:
@@ -6404,7 +6726,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup56:
@@ -6481,7 +6803,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup57:
@@ -6558,7 +6880,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup58:
@@ -6635,7 +6957,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup59:
@@ -6712,7 +7034,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup60:
@@ -6789,7 +7111,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup61:
@@ -6866,7 +7188,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup62:
@@ -6943,7 +7265,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup63:
@@ -7020,7 +7342,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup64:
@@ -7097,7 +7419,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup65:
@@ -7174,7 +7496,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup66:
@@ -7251,7 +7573,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup67:
@@ -7328,7 +7650,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup68:
@@ -7405,7 +7727,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup69:
@@ -7482,7 +7804,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup70:
@@ -7559,7 +7881,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup71:
@@ -7636,7 +7958,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup72:
@@ -7713,7 +8035,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup73:
@@ -7790,7 +8112,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup74:
@@ -7867,7 +8189,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup75:
@@ -7944,7 +8266,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup76:
@@ -8021,7 +8343,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup77:
@@ -8098,7 +8420,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup78:
@@ -8175,7 +8497,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup79:
@@ -8252,7 +8574,7 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # INSTANCE CONFIG - 80
+  # INSTANCE CONFIG - 94
   # ====================================================
 
   AutoScalingGroup80:
@@ -8323,6 +8645,1084 @@ Resources:
           MountPoints:
           - ContainerPath: /factorio
             SourceVolume: !Sub "${AWS::StackName}-factorio-80"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup81:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-81"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState81, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState81, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState81, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService81:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState81, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-81"
+      TaskDefinition: !Ref EcsTask81
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask81:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-81"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-81
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-81"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup82:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-82"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState82, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState82, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState82, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService82:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState82, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-82"
+      TaskDefinition: !Ref EcsTask82
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask82:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-82"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-82
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-82"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup83:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-83"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState83, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState83, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState83, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService83:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState83, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-83"
+      TaskDefinition: !Ref EcsTask83
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask83:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-83"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-83
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-83"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup84:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-84"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState84, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState84, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState84, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService84:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState84, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-84"
+      TaskDefinition: !Ref EcsTask84
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask84:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-84"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-84
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-84"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup85:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-85"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState85, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState85, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState85, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService85:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState85, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-85"
+      TaskDefinition: !Ref EcsTask85
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask85:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-85"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-85
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-85"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup86:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-86"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState86, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState86, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState86, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService86:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState86, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-86"
+      TaskDefinition: !Ref EcsTask86
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask86:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-86"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-86
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-86"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup87:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-87"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState87, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState87, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState87, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService87:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState87, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-87"
+      TaskDefinition: !Ref EcsTask87
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask87:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-87"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-87
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-87"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup88:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-88"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState88, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState88, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState88, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService88:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState88, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-88"
+      TaskDefinition: !Ref EcsTask88
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask88:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-88"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-88
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-88"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup89:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-89"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState89, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState89, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState89, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService89:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState89, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-89"
+      TaskDefinition: !Ref EcsTask89
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask89:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-89"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-89
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-89"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup90:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-90"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState90, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState90, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState90, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService90:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState90, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-90"
+      TaskDefinition: !Ref EcsTask90
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask90:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-90"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-90
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-90"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup91:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-91"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState91, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState91, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState91, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService91:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState91, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-91"
+      TaskDefinition: !Ref EcsTask91
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask91:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-91"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-91
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-91"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup92:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-92"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState92, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState92, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState92, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService92:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState92, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-92"
+      TaskDefinition: !Ref EcsTask92
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask92:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-92"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-92
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-92"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup93:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-93"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState93, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState93, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState93, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService93:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState93, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-93"
+      TaskDefinition: !Ref EcsTask93
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask93:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-93"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-93
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-93"
+            ReadOnly: false
+          Environment:
+          - Name: UPDATE_MODS_ON_START
+            Value: !Sub "${UpdateModsOnStart}"
+
+  # ====================================================
+  # INSTANCE CONFIG - 94
+  # ====================================================
+
+  AutoScalingGroup94:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${AWS::StackName}-asg-94"
+      DesiredCapacity: !FindInMap [ ServerState, !Ref ServerState94, DesiredCapacity ]
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandPercentageAboveBaseCapacity:
+            !If [ UsingSpotInstance, 0, 100 ]
+          SpotAllocationStrategy: lowest-price
+          SpotMaxPrice:
+            !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+           - Fn::If:
+             - InstanceTypeProvided
+             - InstanceType: !Ref InstanceType
+             - InstanceRequirements:
+                 MemoryMiB:
+                   Min: !Ref SpotMinMemoryMiB
+                 VCpuCount:
+                   Min: !Ref SpotMinVCpuCount
+      MaxSize: !FindInMap [ ServerState, !Ref ServerState94, DesiredCapacity ]
+      MinSize: !FindInMap [ ServerState, !Ref ServerState94, DesiredCapacity ]
+      VPCZoneIdentifier:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  EcsService94:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: !FindInMap [ ServerState, !Ref ServerState94, DesiredCapacity ]
+      ServiceName: !Sub "${AWS::StackName}-ecs-service-94"
+      TaskDefinition: !Ref EcsTask94
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+
+  EcsTask94:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+    - MountA
+    - MountB
+    Properties:
+      Volumes:
+      - Name: !Sub "${AWS::StackName}-factorio-94"
+        EFSVolumeConfiguration:
+          FilesystemId: !Ref Efs
+          TransitEncryption: ENABLED
+          RootDirectory: /factorio-94
+      ContainerDefinitions:
+        - Name: factorio
+          MemoryReservation: 1024
+          Image: !Sub "factoriotools/factorio:${FactorioImageTag}"
+          PortMappings:
+          - ContainerPort: 34197
+            HostPort: 34197
+            Protocol: udp
+          - ContainerPort: 27015
+            HostPort: 27015
+            Protocol: tcp
+          MountPoints:
+          - ContainerPath: /factorio
+            SourceVolume: !Sub "${AWS::StackName}-factorio-94"
             ReadOnly: false
           Environment:
           - Name: UPDATE_MODS_ON_START
@@ -8447,6 +9847,20 @@ Resources:
             !Sub "${AutoScalingGroup78}:${RecordName78}",
             !Sub "${AutoScalingGroup79}:${RecordName79}",
             !Sub "${AutoScalingGroup80}:${RecordName80}",
+            !Sub "${AutoScalingGroup81}:${RecordName81}",
+            !Sub "${AutoScalingGroup82}:${RecordName82}",
+            !Sub "${AutoScalingGroup83}:${RecordName83}",
+            !Sub "${AutoScalingGroup84}:${RecordName84}",
+            !Sub "${AutoScalingGroup85}:${RecordName85}",
+            !Sub "${AutoScalingGroup86}:${RecordName86}",
+            !Sub "${AutoScalingGroup87}:${RecordName87}",
+            !Sub "${AutoScalingGroup88}:${RecordName88}",
+            !Sub "${AutoScalingGroup89}:${RecordName89}",
+            !Sub "${AutoScalingGroup90}:${RecordName90}",
+            !Sub "${AutoScalingGroup91}:${RecordName91}",
+            !Sub "${AutoScalingGroup92}:${RecordName92}",
+            !Sub "${AutoScalingGroup93}:${RecordName93}",
+            !Sub "${AutoScalingGroup94}:${RecordName94}",
           ]]
       Code:
         ZipFile: |
@@ -8584,6 +9998,20 @@ Resources:
           - !Ref AutoScalingGroup78
           - !Ref AutoScalingGroup79
           - !Ref AutoScalingGroup80
+          - !Ref AutoScalingGroup81
+          - !Ref AutoScalingGroup82
+          - !Ref AutoScalingGroup83
+          - !Ref AutoScalingGroup84
+          - !Ref AutoScalingGroup85
+          - !Ref AutoScalingGroup86
+          - !Ref AutoScalingGroup87
+          - !Ref AutoScalingGroup88
+          - !Ref AutoScalingGroup89
+          - !Ref AutoScalingGroup90
+          - !Ref AutoScalingGroup91
+          - !Ref AutoScalingGroup92
+          - !Ref AutoScalingGroup93
+          - !Ref AutoScalingGroup94
       Name: !Sub "${AWS::StackName}-instance-launch"
       State: ENABLED
       Targets:

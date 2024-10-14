@@ -78,7 +78,7 @@ Parameters:
   ServerState1:
     Type: String
     Description: "Running: A spot instance for Server 1 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -95,7 +95,7 @@ Parameters:
   ServerState2:
     Type: String
     Description: "Running: A spot instance for Server 2 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -112,7 +112,7 @@ Parameters:
   ServerState3:
     Type: String
     Description: "Running: A spot instance for Server 3 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -129,7 +129,7 @@ Parameters:
   ServerState4:
     Type: String
     Description: "Running: A spot instance for Server 4 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -146,7 +146,7 @@ Parameters:
   ServerState5:
     Type: String
     Description: "Running: A spot instance for Server 5 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -163,7 +163,7 @@ Parameters:
   ServerState6:
     Type: String
     Description: "Running: A spot instance for Server 6 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -180,7 +180,7 @@ Parameters:
   ServerState7:
     Type: String
     Description: "Running: A spot instance for Server 7 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -197,7 +197,7 @@ Parameters:
   ServerState8:
     Type: String
     Description: "Running: A spot instance for Server 8 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -214,7 +214,7 @@ Parameters:
   ServerState9:
     Type: String
     Description: "Running: A spot instance for Server 9 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -231,7 +231,7 @@ Parameters:
   ServerState10:
     Type: String
     Description: "Running: A spot instance for Server 10 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -248,7 +248,7 @@ Parameters:
   ServerState11:
     Type: String
     Description: "Running: A spot instance for Server 11 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -265,7 +265,7 @@ Parameters:
   ServerState12:
     Type: String
     Description: "Running: A spot instance for Server 12 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -282,7 +282,7 @@ Parameters:
   ServerState13:
     Type: String
     Description: "Running: A spot instance for Server 13 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -299,7 +299,7 @@ Parameters:
   ServerState14:
     Type: String
     Description: "Running: A spot instance for Server 14 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -316,7 +316,7 @@ Parameters:
   ServerState15:
     Type: String
     Description: "Running: A spot instance for Server 15 will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: Stopped
     AllowedValues:
     - Running
     - Stopped
@@ -605,9 +605,9 @@ Resources:
   MountB:
     Type: AWS::EFS::MountTarget
     Properties:
-      FileSystemId: !Ref Efs15
+      FileSystemId: !Ref Efs
       SecurityGroups:
-      - !Ref EfsSg15
+      - !Ref EfsSg
       SubnetId: !Ref SubnetB
 
   EfsSg:
