@@ -316,16 +316,11 @@ Resources:
       Roles:
         - !Ref InstanceRole
 
-RESOURCES_START
-
-for i in $(seq 1 $SERVERS)
-do
-cat <<PARAM_BLOCK
   # ====================================================
-  # ${i} - EFS FOR PERSISTENT DATA
+  # EFS FOR PERSISTENT DATA
   # ====================================================
 
-  Efs${i}:
+  Efs:
     Type: AWS::EFS::FileSystem
     DeletionPolicy: Retain
     Properties:
@@ -334,17 +329,17 @@ cat <<PARAM_BLOCK
       - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
       FileSystemTags:
       - Key: Name
-        Value: !Sub "\${AWS::StackName}-fs-${i}"
+        Value: !Sub "\${AWS::StackName}-fs"
 
-  Mount${i}A:
+  MountA:
     Type: AWS::EFS::MountTarget
     Properties:
-      FileSystemId: !Ref Efs${i}
+      FileSystemId: !Ref Efs
       SecurityGroups:
-      - !Ref EfsSg${i}
+      - !Ref EfsSg
       SubnetId: !Ref SubnetA
 
-  Mount${i}B:
+  MountB:
     Type: AWS::EFS::MountTarget
     Properties:
       FileSystemId: !Ref Efs${i}
@@ -352,27 +347,27 @@ cat <<PARAM_BLOCK
       - !Ref EfsSg${i}
       SubnetId: !Ref SubnetB
 
-  EfsSg${i}:
+  EfsSg:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: !Sub "\${AWS::StackName}-efs-${i}"
-      GroupDescription: !Sub "\${AWS::StackName}-efs-${i}"
+      GroupName: !Sub "\${AWS::StackName}-efs"
+      GroupDescription: !Sub "\${AWS::StackName}-efs"
       SecurityGroupIngress:
       - FromPort: 2049
         ToPort: 2049
         IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg${i}
+        SourceSecurityGroupId: !Ref Ec2Sg
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - ${1}
+  # EC2 Common
   # ====================================================
 
-  Ec2Sg${i}:
+  Ec2Sg:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: !Sub "\${AWS::StackName}-ec2-${i}"
-      GroupDescription: !Sub "\${AWS::StackName}-ec2-${i}"
+      GroupName: !Sub "\${AWS::StackName}-ec2"
+      GroupDescription: !Sub "\${AWS::StackName}-ec2"
       SecurityGroupIngress:
       - !If
         - IpAddressProvided
@@ -394,22 +389,35 @@ cat <<PARAM_BLOCK
         - !Ref 'AWS::NoValue'
       VpcId: !Ref Vpc
 
-  LaunchTemplate${i}:
+  LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
-      LaunchTemplateName: !Sub \${AWS::StackName}-launch-template-${i}
+      LaunchTemplateName: !Sub \${AWS::StackName}-launch-template
       LaunchTemplateData:
         IamInstanceProfile:
           Arn: !GetAtt InstanceProfile.Arn
         ImageId: !Ref ECSAMI
         SecurityGroupIds:
-        - !Ref Ec2Sg${i}
+        - !Ref Ec2Sg
         KeyName:
           !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
         UserData:
           Fn::Base64: !Sub |
             #!/bin/bash -xe
-            echo ECS_CLUSTER=\${EcsCluster${i}} >> /etc/ecs/ecs.config
+            echo ECS_CLUSTER=\${EcsCluster} >> /etc/ecs/ecs.config
+
+  EcsCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "\${AWS::StackName}-cluster"
+RESOURCES_START
+
+for i in $(seq 1 $SERVERS)
+do
+cat <<PARAM_BLOCK
+  # ====================================================
+  # INSTANCE CONFIG - ${1}
+  # ====================================================
 
   AutoScalingGroup${i}:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -425,8 +433,8 @@ cat <<PARAM_BLOCK
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate${i}
-            Version: !GetAtt LaunchTemplate${i}.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -442,15 +450,10 @@ cat <<PARAM_BLOCK
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster${i}:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "\${AWS::StackName}-cluster-${i}"
-
   EcsService${i}:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster${i}
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState${i}, DesiredCapacity ]
       ServiceName: !Sub "\${AWS::StackName}-ecs-service-${i}"
       TaskDefinition: !Ref EcsTask${i}
@@ -461,14 +464,15 @@ cat <<PARAM_BLOCK
   EcsTask${i}:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount${i}A
-    - Mount${i}B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "\${AWS::StackName}-factorio-${i}"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs${i}
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-${i}
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024

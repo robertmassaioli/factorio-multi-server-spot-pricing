@@ -580,10 +580,10 @@ Resources:
         - !Ref InstanceRole
 
   # ====================================================
-  # 1 - EFS FOR PERSISTENT DATA
+  # EFS FOR PERSISTENT DATA
   # ====================================================
 
-  Efs1:
+  Efs:
     Type: AWS::EFS::FileSystem
     DeletionPolicy: Retain
     Properties:
@@ -592,45 +592,45 @@ Resources:
       - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
       FileSystemTags:
       - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-1"
+        Value: !Sub "${AWS::StackName}-fs"
 
-  Mount1A:
+  MountA:
     Type: AWS::EFS::MountTarget
     Properties:
-      FileSystemId: !Ref Efs1
+      FileSystemId: !Ref Efs
       SecurityGroups:
-      - !Ref EfsSg1
+      - !Ref EfsSg
       SubnetId: !Ref SubnetA
 
-  Mount1B:
+  MountB:
     Type: AWS::EFS::MountTarget
     Properties:
-      FileSystemId: !Ref Efs1
+      FileSystemId: !Ref Efs15
       SecurityGroups:
-      - !Ref EfsSg1
+      - !Ref EfsSg15
       SubnetId: !Ref SubnetB
 
-  EfsSg1:
+  EfsSg:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-1"
-      GroupDescription: !Sub "${AWS::StackName}-efs-1"
+      GroupName: !Sub "${AWS::StackName}-efs"
+      GroupDescription: !Sub "${AWS::StackName}-efs"
       SecurityGroupIngress:
       - FromPort: 2049
         ToPort: 2049
         IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg1
+        SourceSecurityGroupId: !Ref Ec2Sg
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 15
+  # EC2 Common
   # ====================================================
 
-  Ec2Sg1:
+  Ec2Sg:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-1"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-1"
+      GroupName: !Sub "${AWS::StackName}-ec2"
+      GroupDescription: !Sub "${AWS::StackName}-ec2"
       SecurityGroupIngress:
       - !If
         - IpAddressProvided
@@ -652,22 +652,30 @@ Resources:
         - !Ref 'AWS::NoValue'
       VpcId: !Ref Vpc
 
-  LaunchTemplate1:
+  LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-1
+      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template
       LaunchTemplateData:
         IamInstanceProfile:
           Arn: !GetAtt InstanceProfile.Arn
         ImageId: !Ref ECSAMI
         SecurityGroupIds:
-        - !Ref Ec2Sg1
+        - !Ref Ec2Sg
         KeyName:
           !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
         UserData:
           Fn::Base64: !Sub |
             #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster1} >> /etc/ecs/ecs.config
+            echo ECS_CLUSTER=${EcsCluster} >> /etc/ecs/ecs.config
+
+  EcsCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "${AWS::StackName}-cluster"
+  # ====================================================
+  # INSTANCE CONFIG - 15
+  # ====================================================
 
   AutoScalingGroup1:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -683,8 +691,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate1
-            Version: !GetAtt LaunchTemplate1.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -700,15 +708,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster1:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-1"
-
   EcsService1:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster1
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState1, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-1"
       TaskDefinition: !Ref EcsTask1
@@ -719,14 +722,15 @@ Resources:
   EcsTask1:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount1A
-    - Mount1B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-1"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs1
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-1
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -747,94 +751,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 2 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs2:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-2"
-
-  Mount2A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs2
-      SecurityGroups:
-      - !Ref EfsSg2
-      SubnetId: !Ref SubnetA
-
-  Mount2B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs2
-      SecurityGroups:
-      - !Ref EfsSg2
-      SubnetId: !Ref SubnetB
-
-  EfsSg2:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-2"
-      GroupDescription: !Sub "${AWS::StackName}-efs-2"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg2
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg2:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-2"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-2"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate2:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-2
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg2
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster2} >> /etc/ecs/ecs.config
 
   AutoScalingGroup2:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -850,8 +768,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate2
-            Version: !GetAtt LaunchTemplate2.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -867,15 +785,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster2:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-2"
-
   EcsService2:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster2
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState2, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-2"
       TaskDefinition: !Ref EcsTask2
@@ -886,14 +799,15 @@ Resources:
   EcsTask2:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount2A
-    - Mount2B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-2"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs2
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-2
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -914,94 +828,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 3 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs3:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-3"
-
-  Mount3A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs3
-      SecurityGroups:
-      - !Ref EfsSg3
-      SubnetId: !Ref SubnetA
-
-  Mount3B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs3
-      SecurityGroups:
-      - !Ref EfsSg3
-      SubnetId: !Ref SubnetB
-
-  EfsSg3:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-3"
-      GroupDescription: !Sub "${AWS::StackName}-efs-3"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg3
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg3:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-3"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-3"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate3:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-3
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg3
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster3} >> /etc/ecs/ecs.config
 
   AutoScalingGroup3:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -1017,8 +845,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate3
-            Version: !GetAtt LaunchTemplate3.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1034,15 +862,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster3:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-3"
-
   EcsService3:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster3
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState3, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-3"
       TaskDefinition: !Ref EcsTask3
@@ -1053,14 +876,15 @@ Resources:
   EcsTask3:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount3A
-    - Mount3B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-3"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs3
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-3
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -1081,94 +905,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 4 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs4:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-4"
-
-  Mount4A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs4
-      SecurityGroups:
-      - !Ref EfsSg4
-      SubnetId: !Ref SubnetA
-
-  Mount4B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs4
-      SecurityGroups:
-      - !Ref EfsSg4
-      SubnetId: !Ref SubnetB
-
-  EfsSg4:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-4"
-      GroupDescription: !Sub "${AWS::StackName}-efs-4"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg4
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg4:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-4"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-4"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate4:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-4
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg4
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster4} >> /etc/ecs/ecs.config
 
   AutoScalingGroup4:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -1184,8 +922,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate4
-            Version: !GetAtt LaunchTemplate4.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1201,15 +939,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster4:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-4"
-
   EcsService4:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster4
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState4, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-4"
       TaskDefinition: !Ref EcsTask4
@@ -1220,14 +953,15 @@ Resources:
   EcsTask4:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount4A
-    - Mount4B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-4"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs4
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-4
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -1248,94 +982,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 5 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs5:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-5"
-
-  Mount5A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs5
-      SecurityGroups:
-      - !Ref EfsSg5
-      SubnetId: !Ref SubnetA
-
-  Mount5B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs5
-      SecurityGroups:
-      - !Ref EfsSg5
-      SubnetId: !Ref SubnetB
-
-  EfsSg5:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-5"
-      GroupDescription: !Sub "${AWS::StackName}-efs-5"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg5
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg5:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-5"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-5"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate5:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-5
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg5
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster5} >> /etc/ecs/ecs.config
 
   AutoScalingGroup5:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -1351,8 +999,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate5
-            Version: !GetAtt LaunchTemplate5.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1368,15 +1016,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster5:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-5"
-
   EcsService5:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster5
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState5, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-5"
       TaskDefinition: !Ref EcsTask5
@@ -1387,14 +1030,15 @@ Resources:
   EcsTask5:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount5A
-    - Mount5B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-5"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs5
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-5
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -1415,94 +1059,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 6 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs6:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-6"
-
-  Mount6A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs6
-      SecurityGroups:
-      - !Ref EfsSg6
-      SubnetId: !Ref SubnetA
-
-  Mount6B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs6
-      SecurityGroups:
-      - !Ref EfsSg6
-      SubnetId: !Ref SubnetB
-
-  EfsSg6:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-6"
-      GroupDescription: !Sub "${AWS::StackName}-efs-6"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg6
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg6:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-6"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-6"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate6:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-6
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg6
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster6} >> /etc/ecs/ecs.config
 
   AutoScalingGroup6:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -1518,8 +1076,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate6
-            Version: !GetAtt LaunchTemplate6.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1535,15 +1093,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster6:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-6"
-
   EcsService6:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster6
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState6, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-6"
       TaskDefinition: !Ref EcsTask6
@@ -1554,14 +1107,15 @@ Resources:
   EcsTask6:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount6A
-    - Mount6B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-6"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs6
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-6
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -1582,94 +1136,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 7 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs7:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-7"
-
-  Mount7A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs7
-      SecurityGroups:
-      - !Ref EfsSg7
-      SubnetId: !Ref SubnetA
-
-  Mount7B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs7
-      SecurityGroups:
-      - !Ref EfsSg7
-      SubnetId: !Ref SubnetB
-
-  EfsSg7:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-7"
-      GroupDescription: !Sub "${AWS::StackName}-efs-7"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg7
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg7:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-7"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-7"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate7:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-7
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg7
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster7} >> /etc/ecs/ecs.config
 
   AutoScalingGroup7:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -1685,8 +1153,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate7
-            Version: !GetAtt LaunchTemplate7.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1702,15 +1170,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster7:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-7"
-
   EcsService7:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster7
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState7, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-7"
       TaskDefinition: !Ref EcsTask7
@@ -1721,14 +1184,15 @@ Resources:
   EcsTask7:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount7A
-    - Mount7B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-7"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs7
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-7
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -1749,94 +1213,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 8 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs8:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-8"
-
-  Mount8A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs8
-      SecurityGroups:
-      - !Ref EfsSg8
-      SubnetId: !Ref SubnetA
-
-  Mount8B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs8
-      SecurityGroups:
-      - !Ref EfsSg8
-      SubnetId: !Ref SubnetB
-
-  EfsSg8:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-8"
-      GroupDescription: !Sub "${AWS::StackName}-efs-8"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg8
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg8:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-8"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-8"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate8:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-8
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg8
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster8} >> /etc/ecs/ecs.config
 
   AutoScalingGroup8:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -1852,8 +1230,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate8
-            Version: !GetAtt LaunchTemplate8.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1869,15 +1247,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster8:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-8"
-
   EcsService8:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster8
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState8, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-8"
       TaskDefinition: !Ref EcsTask8
@@ -1888,14 +1261,15 @@ Resources:
   EcsTask8:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount8A
-    - Mount8B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-8"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs8
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-8
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -1916,94 +1290,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 9 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs9:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-9"
-
-  Mount9A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs9
-      SecurityGroups:
-      - !Ref EfsSg9
-      SubnetId: !Ref SubnetA
-
-  Mount9B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs9
-      SecurityGroups:
-      - !Ref EfsSg9
-      SubnetId: !Ref SubnetB
-
-  EfsSg9:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-9"
-      GroupDescription: !Sub "${AWS::StackName}-efs-9"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg9
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg9:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-9"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-9"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate9:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-9
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg9
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster9} >> /etc/ecs/ecs.config
 
   AutoScalingGroup9:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -2019,8 +1307,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate9
-            Version: !GetAtt LaunchTemplate9.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -2036,15 +1324,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster9:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-9"
-
   EcsService9:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster9
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState9, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-9"
       TaskDefinition: !Ref EcsTask9
@@ -2055,14 +1338,15 @@ Resources:
   EcsTask9:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount9A
-    - Mount9B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-9"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs9
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-9
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -2083,94 +1367,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 10 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs10:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-10"
-
-  Mount10A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs10
-      SecurityGroups:
-      - !Ref EfsSg10
-      SubnetId: !Ref SubnetA
-
-  Mount10B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs10
-      SecurityGroups:
-      - !Ref EfsSg10
-      SubnetId: !Ref SubnetB
-
-  EfsSg10:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-10"
-      GroupDescription: !Sub "${AWS::StackName}-efs-10"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg10
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg10:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-10"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-10"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate10:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-10
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg10
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster10} >> /etc/ecs/ecs.config
 
   AutoScalingGroup10:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -2186,8 +1384,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate10
-            Version: !GetAtt LaunchTemplate10.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -2203,15 +1401,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster10:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-10"
-
   EcsService10:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster10
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState10, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-10"
       TaskDefinition: !Ref EcsTask10
@@ -2222,14 +1415,15 @@ Resources:
   EcsTask10:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount10A
-    - Mount10B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-10"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs10
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-10
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -2250,94 +1444,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 11 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs11:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-11"
-
-  Mount11A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs11
-      SecurityGroups:
-      - !Ref EfsSg11
-      SubnetId: !Ref SubnetA
-
-  Mount11B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs11
-      SecurityGroups:
-      - !Ref EfsSg11
-      SubnetId: !Ref SubnetB
-
-  EfsSg11:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-11"
-      GroupDescription: !Sub "${AWS::StackName}-efs-11"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg11
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg11:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-11"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-11"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate11:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-11
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg11
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster11} >> /etc/ecs/ecs.config
 
   AutoScalingGroup11:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -2353,8 +1461,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate11
-            Version: !GetAtt LaunchTemplate11.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -2370,15 +1478,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster11:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-11"
-
   EcsService11:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster11
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState11, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-11"
       TaskDefinition: !Ref EcsTask11
@@ -2389,14 +1492,15 @@ Resources:
   EcsTask11:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount11A
-    - Mount11B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-11"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs11
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-11
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -2417,94 +1521,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 12 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs12:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-12"
-
-  Mount12A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs12
-      SecurityGroups:
-      - !Ref EfsSg12
-      SubnetId: !Ref SubnetA
-
-  Mount12B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs12
-      SecurityGroups:
-      - !Ref EfsSg12
-      SubnetId: !Ref SubnetB
-
-  EfsSg12:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-12"
-      GroupDescription: !Sub "${AWS::StackName}-efs-12"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg12
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg12:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-12"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-12"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate12:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-12
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg12
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster12} >> /etc/ecs/ecs.config
 
   AutoScalingGroup12:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -2520,8 +1538,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate12
-            Version: !GetAtt LaunchTemplate12.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -2537,15 +1555,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster12:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-12"
-
   EcsService12:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster12
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState12, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-12"
       TaskDefinition: !Ref EcsTask12
@@ -2556,14 +1569,15 @@ Resources:
   EcsTask12:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount12A
-    - Mount12B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-12"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs12
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-12
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -2584,94 +1598,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 13 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs13:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-13"
-
-  Mount13A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs13
-      SecurityGroups:
-      - !Ref EfsSg13
-      SubnetId: !Ref SubnetA
-
-  Mount13B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs13
-      SecurityGroups:
-      - !Ref EfsSg13
-      SubnetId: !Ref SubnetB
-
-  EfsSg13:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-13"
-      GroupDescription: !Sub "${AWS::StackName}-efs-13"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg13
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg13:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-13"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-13"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate13:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-13
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg13
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster13} >> /etc/ecs/ecs.config
 
   AutoScalingGroup13:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -2687,8 +1615,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate13
-            Version: !GetAtt LaunchTemplate13.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -2704,15 +1632,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster13:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-13"
-
   EcsService13:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster13
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState13, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-13"
       TaskDefinition: !Ref EcsTask13
@@ -2723,14 +1646,15 @@ Resources:
   EcsTask13:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount13A
-    - Mount13B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-13"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs13
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-13
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -2751,94 +1675,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 14 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs14:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-14"
-
-  Mount14A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs14
-      SecurityGroups:
-      - !Ref EfsSg14
-      SubnetId: !Ref SubnetA
-
-  Mount14B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs14
-      SecurityGroups:
-      - !Ref EfsSg14
-      SubnetId: !Ref SubnetB
-
-  EfsSg14:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-14"
-      GroupDescription: !Sub "${AWS::StackName}-efs-14"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg14
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg14:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-14"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-14"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate14:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-14
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg14
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster14} >> /etc/ecs/ecs.config
 
   AutoScalingGroup14:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -2854,8 +1692,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate14
-            Version: !GetAtt LaunchTemplate14.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -2871,15 +1709,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster14:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-14"
-
   EcsService14:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster14
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState14, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-14"
       TaskDefinition: !Ref EcsTask14
@@ -2890,14 +1723,15 @@ Resources:
   EcsTask14:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount14A
-    - Mount14B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-14"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs14
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-14
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
@@ -2918,94 +1752,8 @@ Resources:
             Value: !Sub "${UpdateModsOnStart}"
 
   # ====================================================
-  # 15 - EFS FOR PERSISTENT DATA
-  # ====================================================
-
-  Efs15:
-    Type: AWS::EFS::FileSystem
-    DeletionPolicy: Retain
-    Properties:
-      LifecyclePolicies:
-      - TransitionToIA: AFTER_7_DAYS
-      - TransitionToPrimaryStorageClass: AFTER_1_ACCESS
-      FileSystemTags:
-      - Key: Name
-        Value: !Sub "${AWS::StackName}-fs-15"
-
-  Mount15A:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs15
-      SecurityGroups:
-      - !Ref EfsSg15
-      SubnetId: !Ref SubnetA
-
-  Mount15B:
-    Type: AWS::EFS::MountTarget
-    Properties:
-      FileSystemId: !Ref Efs15
-      SecurityGroups:
-      - !Ref EfsSg15
-      SubnetId: !Ref SubnetB
-
-  EfsSg15:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-efs-15"
-      GroupDescription: !Sub "${AWS::StackName}-efs-15"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg15
-      VpcId: !Ref Vpc
-
-  # ====================================================
   # INSTANCE CONFIG - 15
   # ====================================================
-
-  Ec2Sg15:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2-15"
-      GroupDescription: !Sub "${AWS::StackName}-ec2-15"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
-
-  LaunchTemplate15:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-15
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg15
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster15} >> /etc/ecs/ecs.config
 
   AutoScalingGroup15:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -3021,8 +1769,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate15
-            Version: !GetAtt LaunchTemplate15.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -3038,15 +1786,10 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster15:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster-15"
-
   EcsService15:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster15
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState15, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-15"
       TaskDefinition: !Ref EcsTask15
@@ -3057,14 +1800,15 @@ Resources:
   EcsTask15:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
-    - Mount15A
-    - Mount15B
+    - MountA
+    - MountB
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-15"
         EFSVolumeConfiguration:
-          FilesystemId: !Ref Efs15
+          FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
+          RootDirectory: /factorio-15
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
