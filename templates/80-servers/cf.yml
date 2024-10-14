@@ -2117,57 +2117,128 @@ Resources:
         SourceSecurityGroupId: !Ref Ec2Sg
       VpcId: !Ref Vpc
 
-  # ====================================================
-  # EC2 Common
-  # ====================================================
-
-  Ec2Sg:
-    Type: AWS::EC2::SecurityGroup
+  CreateEFSSubdirectoriesLambda:
+    Type: AWS::Lambda::Function
     Properties:
-      GroupName: !Sub "${AWS::StackName}-ec2"
-      GroupDescription: !Sub "${AWS::StackName}-ec2"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          import boto3
+          import cfnresponse
+          import os
+          import subprocess
 
-  LaunchTemplate:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster} >> /etc/ecs/ecs.config
+          def handler(event, context):
+            try:
+              if event['RequestType'] == 'Create':
+                efs_id = event['ResourceProperties']['FileSystemId']
+                dirs = event['ResourceProperties']['Directories']
 
-  EcsCluster:
-    Type: AWS::ECS::Cluster
+                # Mount EFS
+                subprocess.run(['mkdir', '-p', '/mnt/efs'])
+                subprocess.run(['mount', '-t', 'efs', f'{efs_id}:/', '/mnt/efs'])
+
+                # Create directories
+                for dir in dirs:
+                  os.makedirs(f'/mnt/efs/{dir}', exist_ok=True)
+
+                # Unmount EFS
+                subprocess.run(['umount', '/mnt/efs'])
+
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
+            except Exception as e:
+              cfnresponse.send(event, context, cfnresponse.FAILED, {"Error": str(e)})
+      Runtime: python3.8
+      Timeout: 300
+
+  CreateEFSSubdirectories:
+    Type: Custom::CreateEFSSubdirectories
     Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster"
+      ServiceToken: !GetAtt CreateEFSSubdirectoriesLambda.Arn
+      FileSystemId: !Ref Efs
+      Directories:
+        - factorio-1
+        - factorio-2
+        - factorio-3
+        - factorio-4
+        - factorio-5
+        - factorio-6
+        - factorio-7
+        - factorio-8
+        - factorio-9
+        - factorio-10
+        - factorio-11
+        - factorio-12
+        - factorio-13
+        - factorio-14
+        - factorio-15
+        - factorio-16
+        - factorio-17
+        - factorio-18
+        - factorio-19
+        - factorio-20
+        - factorio-21
+        - factorio-22
+        - factorio-23
+        - factorio-24
+        - factorio-25
+        - factorio-26
+        - factorio-27
+        - factorio-28
+        - factorio-29
+        - factorio-30
+        - factorio-31
+        - factorio-32
+        - factorio-33
+        - factorio-34
+        - factorio-35
+        - factorio-36
+        - factorio-37
+        - factorio-38
+        - factorio-39
+        - factorio-40
+        - factorio-41
+        - factorio-42
+        - factorio-43
+        - factorio-44
+        - factorio-45
+        - factorio-46
+        - factorio-47
+        - factorio-48
+        - factorio-49
+        - factorio-50
+        - factorio-51
+        - factorio-52
+        - factorio-53
+        - factorio-54
+        - factorio-55
+        - factorio-56
+        - factorio-57
+        - factorio-58
+        - factorio-59
+        - factorio-60
+        - factorio-61
+        - factorio-62
+        - factorio-63
+        - factorio-64
+        - factorio-65
+        - factorio-66
+        - factorio-67
+        - factorio-68
+        - factorio-69
+        - factorio-70
+        - factorio-71
+        - factorio-72
+        - factorio-73
+        - factorio-74
+        - factorio-75
+        - factorio-76
+        - factorio-77
+        - factorio-78
+        - factorio-79
+        - factorio-80
+
   # ====================================================
   # INSTANCE CONFIG - 80
   # ====================================================
@@ -2219,6 +2290,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-1"
@@ -2296,6 +2368,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-2"
@@ -2373,6 +2446,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-3"
@@ -2450,6 +2524,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-4"
@@ -2527,6 +2602,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-5"
@@ -2604,6 +2680,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-6"
@@ -2681,6 +2758,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-7"
@@ -2758,6 +2836,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-8"
@@ -2835,6 +2914,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-9"
@@ -2912,6 +2992,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-10"
@@ -2989,6 +3070,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-11"
@@ -3066,6 +3148,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-12"
@@ -3143,6 +3226,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-13"
@@ -3220,6 +3304,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-14"
@@ -3297,6 +3382,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-15"
@@ -3374,6 +3460,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-16"
@@ -3451,6 +3538,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-17"
@@ -3528,6 +3616,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-18"
@@ -3605,6 +3694,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-19"
@@ -3682,6 +3772,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-20"
@@ -3759,6 +3850,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-21"
@@ -3836,6 +3928,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-22"
@@ -3913,6 +4006,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-23"
@@ -3990,6 +4084,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-24"
@@ -4067,6 +4162,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-25"
@@ -4144,6 +4240,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-26"
@@ -4221,6 +4318,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-27"
@@ -4298,6 +4396,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-28"
@@ -4375,6 +4474,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-29"
@@ -4452,6 +4552,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-30"
@@ -4529,6 +4630,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-31"
@@ -4606,6 +4708,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-32"
@@ -4683,6 +4786,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-33"
@@ -4760,6 +4864,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-34"
@@ -4837,6 +4942,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-35"
@@ -4914,6 +5020,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-36"
@@ -4991,6 +5098,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-37"
@@ -5068,6 +5176,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-38"
@@ -5145,6 +5254,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-39"
@@ -5222,6 +5332,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-40"
@@ -5299,6 +5410,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-41"
@@ -5376,6 +5488,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-42"
@@ -5453,6 +5566,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-43"
@@ -5530,6 +5644,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-44"
@@ -5607,6 +5722,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-45"
@@ -5684,6 +5800,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-46"
@@ -5761,6 +5878,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-47"
@@ -5838,6 +5956,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-48"
@@ -5915,6 +6034,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-49"
@@ -5992,6 +6112,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-50"
@@ -6069,6 +6190,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-51"
@@ -6146,6 +6268,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-52"
@@ -6223,6 +6346,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-53"
@@ -6300,6 +6424,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-54"
@@ -6377,6 +6502,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-55"
@@ -6454,6 +6580,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-56"
@@ -6531,6 +6658,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-57"
@@ -6608,6 +6736,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-58"
@@ -6685,6 +6814,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-59"
@@ -6762,6 +6892,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-60"
@@ -6839,6 +6970,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-61"
@@ -6916,6 +7048,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-62"
@@ -6993,6 +7126,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-63"
@@ -7070,6 +7204,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-64"
@@ -7147,6 +7282,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-65"
@@ -7224,6 +7360,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-66"
@@ -7301,6 +7438,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-67"
@@ -7378,6 +7516,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-68"
@@ -7455,6 +7594,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-69"
@@ -7532,6 +7672,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-70"
@@ -7609,6 +7750,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-71"
@@ -7686,6 +7828,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-72"
@@ -7763,6 +7906,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-73"
@@ -7840,6 +7984,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-74"
@@ -7917,6 +8062,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-75"
@@ -7994,6 +8140,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-76"
@@ -8071,6 +8218,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-77"
@@ -8148,6 +8296,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-78"
@@ -8225,6 +8374,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-79"
@@ -8302,6 +8452,7 @@ Resources:
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "${AWS::StackName}-factorio-80"

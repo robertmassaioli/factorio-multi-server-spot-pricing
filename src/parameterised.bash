@@ -359,6 +359,58 @@ Resources:
         SourceSecurityGroupId: !Ref Ec2Sg
       VpcId: !Ref Vpc
 
+  CreateEFSSubdirectoriesLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          import boto3
+          import cfnresponse
+          import os
+          import subprocess
+
+          def handler(event, context):
+            try:
+              if event['RequestType'] == 'Create':
+                efs_id = event['ResourceProperties']['FileSystemId']
+                dirs = event['ResourceProperties']['Directories']
+
+                # Mount EFS
+                subprocess.run(['mkdir', '-p', '/mnt/efs'])
+                subprocess.run(['mount', '-t', 'efs', f'{efs_id}:/', '/mnt/efs'])
+
+                # Create directories
+                for dir in dirs:
+                  os.makedirs(f'/mnt/efs/{dir}', exist_ok=True)
+
+                # Unmount EFS
+                subprocess.run(['umount', '/mnt/efs'])
+
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
+            except Exception as e:
+              cfnresponse.send(event, context, cfnresponse.FAILED, {"Error": str(e)})
+      Runtime: python3.8
+      Timeout: 300
+
+  CreateEFSSubdirectories:
+    Type: Custom::CreateEFSSubdirectories
+    Properties:
+      ServiceToken: !GetAtt CreateEFSSubdirectoriesLambda.Arn
+      FileSystemId: !Ref Efs
+      Directories:
+RESOURCES_START
+
+for i in $(seq 1 $SERVERS)
+do
+cat <<SUB_DIRECTORIES_EFS
+        - factorio-${i}
+SUB_DIRECTORIES_EFS
+done
+
+echo <<EC2_COMMON_RESOURCES
+
   # ====================================================
   # EC2 Common
   # ====================================================
@@ -410,7 +462,7 @@ Resources:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: !Sub "\${AWS::StackName}-cluster"
-RESOURCES_START
+EC2_COMMON_RESOURCES
 
 for i in $(seq 1 $SERVERS)
 do
@@ -466,6 +518,7 @@ cat <<PARAM_BLOCK
     DependsOn:
     - MountA
     - MountB
+    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "\${AWS::StackName}-factorio-${i}"
