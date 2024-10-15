@@ -421,6 +421,22 @@ Resources:
       SecurityGroupIds:
         - !Ref LambdaSecurityGroup
 
+  S3VPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.s3"
+      VpcId: !Ref Vpc
+      RouteTableIds:
+        - !Ref RouteTable
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action:
+              - "s3:*"
+            Resource: "*"
+
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -433,6 +449,7 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AmazonElasticFileSystemClientReadWriteAccess
       Policies:
         - PolicyName: EfsAccess
           PolicyDocument:
@@ -472,8 +489,6 @@ Resources:
   CreateDirectoriesFunction:
     Type: AWS::Lambda::Function
     Properties:
-      Description: Creates the initial directories for the EFS drive.
-      FunctionName: !Sub "${AWS::StackName}-create-factorio-directories"
       Handler: index.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
@@ -482,39 +497,64 @@ Resources:
           import boto3
           import os
           import errno
+          import logging
+
+          # Set up logging
+          logger = logging.getLogger()
+          logger.setLevel(logging.INFO)
 
           def handler(event, context):
+              logger.info(f"Event received: {event}")
               try:
                   if event['RequestType'] in ['Create', 'Update']:
                       efs_id = event['ResourceProperties']['EfsFileSystemId']
                       directory_names = event['ResourceProperties']['DirectoryNames']
-
+                      
+                      logger.info(f"EFS ID: {efs_id}")
+                      logger.info(f"Directories to create: {directory_names}")
+                      
                       # Mount EFS
                       mount_path = '/mnt/efs'
+                      logger.info(f"Creating mount path: {mount_path}")
                       os.makedirs(mount_path, exist_ok=True)
-                      os.system(f'mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport {efs_id}.efs.{os.environ["AWS_REGION"]}.amazonaws.com:/ {mount_path}')
-
+                      
+                      mount_command = f'mount -t nfs4 -o rw,nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport {efs_id}.efs.{os.environ["AWS_REGION"]}.amazonaws.com:/ {mount_path}'
+                      logger.info(f"Mounting EFS with command: {mount_command}")
+                      mount_result = os.system(mount_command)
+                      logger.info(f"Mount command result: {mount_result}")
+                      
                       # Create directories
                       created_dirs = []
                       for directory_name in directory_names:
                           dir_path = os.path.join(mount_path, directory_name)
+                          logger.info(f"Attempting to create directory: {dir_path}")
                           try:
                               os.makedirs(dir_path)
                               created_dirs.append(directory_name)
+                              logger.info(f"Successfully created directory: {dir_path}")
                           except OSError as exc:
                               if exc.errno != errno.EEXIST:
+                                  logger.error(f"Failed to create directory {dir_path}: {exc}")
                                   raise
-
+                              else:
+                                  logger.warning(f"Directory already exists: {dir_path}")
+                      
                       # Unmount EFS
-                      os.system(f'umount {mount_path}')
-
-                      cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Message': f'Directories created successfully: {", ".join(created_dirs)}'})
+                      logger.info(f"Unmounting EFS from {mount_path}")
+                      unmount_result = os.system(f'umount {mount_path}')
+                      logger.info(f"Unmount command result: {unmount_result}")
+                      
+                      success_message = f'Directories created successfully: {", ".join(created_dirs)}'
+                      logger.info(success_message)
+                      cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Message': success_message})
                   elif event['RequestType'] == 'Delete':
+                      logger.info("Delete request received. No action taken.")
                       cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Message': 'Delete request acknowledged'})
               except Exception as e:
+                  logger.error(f"Error occurred: {str(e)}", exc_info=True)
                   cfnresponse.send(event, context, cfnresponse.FAILED, {'Error': str(e)})
 
-      Runtime: python3.12
+      Runtime: python3.8
       Timeout: 300
       VpcConfig:
         SecurityGroupIds:
