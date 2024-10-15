@@ -392,64 +392,110 @@ Resources:
         SourceSecurityGroupId: !Ref Ec2Sg
       VpcId: !Ref Vpc
 
-  EFSAccessPoint:
-    Type: AWS::EFS::AccessPoint
+  LambdaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
     Properties:
-      FileSystemId: !Ref Efs
-      PosixUser:
-        Uid: "1000"
-        Gid: "1000"
+      GroupDescription: Security group for Lambda function
+      VpcId: !Ref Vpc
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 2049
+          ToPort: 2049
+          CidrIp: 0.0.0.0/0
 
-  CreateEFSSubdirectoriesLambda:
-    Type: AWS::Lambda::Function
-    DependsOn:
-      - MountA
-      - MountB
-      - SubnetA
-      - SubnetB
-      - EfsSg
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
     Properties:
-      FunctionName: !Sub "${AWS::StackName}-create-sub-directories"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyName: EfsAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticfilesystem:ClientMount
+                  - elasticfilesystem:ClientWrite
+                Resource: !GetAtt Efs.Arn
+
+  CreateDirectoriesLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt CreateDirectoriesFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: cloudformation.amazonaws.com
+
+  CreateDirectoriesFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Creates the initial directories for the EFS drive.
+      FunctionName: !Sub "${AWS::StackName}-create-factorio-directories"
       Handler: index.handler
-      Role: !GetAtt ExecuteLambdaRole.Arn
+      Role: !GetAtt LambdaExecutionRole.Arn
       Code:
         ZipFile: |
-          import os
           import cfnresponse
+          import boto3
+          import os
+          import errno
 
           def handler(event, context):
-            try:
-              if event['RequestType'] in ['Create']:
-                dirs = event['ResourceProperties']['Directories']
+              try:
+                  if event['RequestType'] in ['Create', 'Update']:
+                      efs_id = event['ResourceProperties']['EfsFileSystemId']
+                      directory_names = event['ResourceProperties']['DirectoryNames']
 
-                # Create directories
-                for dir in dirs:
-                  os.makedirs(f'/mnt/efs/{dir}', exist_ok=True)
+                      # Mount EFS
+                      mount_path = '/mnt/efs'
+                      os.makedirs(mount_path, exist_ok=True)
+                      os.system(f'mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport {efs_id}.efs.{os.environ["AWS_REGION"]}.amazonaws.com:/ {mount_path}')
 
-              cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
-            except Exception as e:
-              cfnresponse.send(event, context, cfnresponse.FAILED, {"Error": str(e)})
+                      # Create directories
+                      created_dirs = []
+                      for directory_name in directory_names:
+                          dir_path = os.path.join(mount_path, directory_name)
+                          try:
+                              os.makedirs(dir_path)
+                              created_dirs.append(directory_name)
+                          except OSError as exc:
+                              if exc.errno != errno.EEXIST:
+                                  raise
+
+                      # Unmount EFS
+                      os.system(f'umount {mount_path}')
+
+                      cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Message': f'Directories created successfully: {", ".join(created_dirs)}'})
+                  elif event['RequestType'] == 'Delete':
+                      cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Message': 'Delete request acknowledged'})
+              except Exception as e:
+                  cfnresponse.send(event, context, cfnresponse.FAILED, {'Error': str(e)})
+
       Runtime: python3.12
-      MemorySize: 128
       Timeout: 300
       VpcConfig:
         SecurityGroupIds:
-          - !Ref EfsSg
+          - !Ref LambdaSecurityGroup
         SubnetIds:
           - !Ref SubnetA
           - !Ref SubnetB
-      FileSystemConfigs:
-        - Arn: !GetAtt EFSAccessPoint.Arn
-          LocalMountPath: /mnt/efs
 
   CreateEFSSubdirectories:
-    Type: Custom::CreateEFSSubdirectories
+    Type: Custom::CreateDirectories
     DependsOn:
-      - CreateEFSSubdirectoriesLambda
+      - MountA
+      - MountB
     Properties:
-      ServiceToken: !GetAtt CreateEFSSubdirectoriesLambda.Arn
-      AccessPointId: !Ref EFSAccessPoint
-      Directories:
+      ServiceToken: !GetAtt CreateDirectoriesFunction.Arn
+      EfsFileSystemId: !Ref Efs
+      DirectoryNames:
         - factorio-1
         - factorio-2
         - factorio-3
