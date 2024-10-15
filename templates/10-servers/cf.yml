@@ -564,7 +564,7 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
-        - arn:aws:iam::aws:policy/service-role/AmazonElasticFileSystemClientReadWriteAccess
+        - arn:aws:iam::aws:policy/AmazonElasticFileSystemClientReadWriteAccess
       Policies:
         - PolicyName: EfsAccess
           PolicyDocument:
@@ -624,20 +624,20 @@ Resources:
                   if event['RequestType'] in ['Create', 'Update']:
                       efs_id = event['ResourceProperties']['EfsFileSystemId']
                       directory_names = event['ResourceProperties']['DirectoryNames']
-                      
+
                       logger.info(f"EFS ID: {efs_id}")
                       logger.info(f"Directories to create: {directory_names}")
-                      
+
                       # Mount EFS
                       mount_path = '/mnt/efs'
                       logger.info(f"Creating mount path: {mount_path}")
                       os.makedirs(mount_path, exist_ok=True)
-                      
+
                       mount_command = f'mount -t nfs4 -o rw,nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport {efs_id}.efs.{os.environ["AWS_REGION"]}.amazonaws.com:/ {mount_path}'
                       logger.info(f"Mounting EFS with command: {mount_command}")
                       mount_result = os.system(mount_command)
                       logger.info(f"Mount command result: {mount_result}")
-                      
+
                       # Create directories
                       created_dirs = []
                       for directory_name in directory_names:
@@ -653,12 +653,12 @@ Resources:
                                   raise
                               else:
                                   logger.warning(f"Directory already exists: {dir_path}")
-                      
+
                       # Unmount EFS
                       logger.info(f"Unmounting EFS from {mount_path}")
                       unmount_result = os.system(f'umount {mount_path}')
                       logger.info(f"Unmount command result: {unmount_result}")
-                      
+
                       success_message = f'Directories created successfully: {", ".join(created_dirs)}'
                       logger.info(success_message)
                       cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Message': success_message})
