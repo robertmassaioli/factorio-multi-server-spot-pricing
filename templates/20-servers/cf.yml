@@ -747,6 +747,12 @@ Resources:
 
   CreateEFSSubdirectoriesLambda:
     Type: AWS::Lambda::Function
+    DependsOn:
+      - MountA
+      - MountB
+      - SubnetA
+      - SubnetB
+      - EfsSg
     Properties:
       FunctionName: !Sub "${AWS::StackName}-create-sub-directories"
       Handler: index.handler
