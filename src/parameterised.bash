@@ -359,46 +359,57 @@ Resources:
         SourceSecurityGroupId: !Ref Ec2Sg
       VpcId: !Ref Vpc
 
+  EFSAccessPoint:
+    Type: AWS::EFS::AccessPoint
+    Properties:
+      FileSystemId: !Ref Efs
+      PosixUser:
+        Uid: "1000"
+        Gid: "1000"
+
   CreateEFSSubdirectoriesLambda:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: !Sub "\${AWS::StackName}-create-sub-directories"
       Handler: index.handler
-      Role: !GetAtt LambdaExecutionRole.Arn
+      Role: !GetAtt ExecuteLambdaRole.Arn
       Code:
         ZipFile: |
-          import boto3
-          import cfnresponse
           import os
-          import subprocess
+          import cfnresponse
 
           def handler(event, context):
             try:
-              if event['RequestType'] == 'Create':
-                efs_id = event['ResourceProperties']['FileSystemId']
+              if event['RequestType'] in ['Create']:
                 dirs = event['ResourceProperties']['Directories']
-
-                # Mount EFS
-                subprocess.run(['mkdir', '-p', '/mnt/efs'])
-                subprocess.run(['mount', '-t', 'efs', f'{efs_id}:/', '/mnt/efs'])
 
                 # Create directories
                 for dir in dirs:
                   os.makedirs(f'/mnt/efs/{dir}', exist_ok=True)
 
-                # Unmount EFS
-                subprocess.run(['umount', '/mnt/efs'])
-
               cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
             except Exception as e:
               cfnresponse.send(event, context, cfnresponse.FAILED, {"Error": str(e)})
-      Runtime: python3.8
+      Runtime: python3.12
+      MemorySize: 128
       Timeout: 300
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref EfsSg
+        SubnetIds:
+          - !Ref SubnetA
+          - !Ref SubnetB
+      FileSystemConfigs:
+        - Arn: !GetAtt EFSAccessPoint.Arn
+          LocalMountPath: /mnt/efs
 
   CreateEFSSubdirectories:
     Type: Custom::CreateEFSSubdirectories
+    DependsOn:
+      - CreateEFSSubdirectoriesLambda
     Properties:
       ServiceToken: !GetAtt CreateEFSSubdirectoriesLambda.Arn
-      FileSystemId: !Ref Efs
+      AccessPointId: !Ref EFSAccessPoint
       Directories:
 RESOURCES_START
 
@@ -409,7 +420,7 @@ cat <<SUB_DIRECTORIES_EFS
 SUB_DIRECTORIES_EFS
 done
 
-echo <<EC2_COMMON_RESOURCES
+cat <<EC2_COMMON_RESOURCES
 
   # ====================================================
   # EC2 Common
@@ -462,6 +473,7 @@ echo <<EC2_COMMON_RESOURCES
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: !Sub "\${AWS::StackName}-cluster"
+
 EC2_COMMON_RESOURCES
 
 for i in $(seq 1 $SERVERS)
@@ -553,9 +565,8 @@ cat <<DNS_START
   # SET DNS RECORD - For all ASGs and EC2 instances
   # ====================================================
 
-  SetDNSRecordLambdaRole:
+  ExecuteLambdaRole:
     Type: AWS::IAM::Role
-    Condition: DnsConfigEnabled
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -568,6 +579,8 @@ cat <<DNS_START
           - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+        - arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess
       Policies:
         - PolicyName: root
           PolicyDocument:
@@ -578,6 +591,12 @@ cat <<DNS_START
                 Resource: "*"
               - Effect: "Allow"
                 Action: "ec2:DescribeInstance*"
+                Resource: "*"
+              - Effect: "Allow"
+                Action:
+                  - "elasticfilesystem:ClientMount"
+                  - "elasticfilesystem:ClientWrite"
+                  - "elasticfilesystem:DescribeMountTargets"
                 Resource: "*"
 
   SetDNSRecordLambda:
@@ -641,7 +660,7 @@ cat <<DNS_MID_1
       FunctionName: !Sub "\${AWS::StackName}-set-dns"
       Handler: index.handler
       MemorySize: 128
-      Role: !GetAtt SetDNSRecordLambdaRole.Arn
+      Role: !GetAtt ExecuteLambdaRole.Arn
       Runtime: python3.12
       Timeout: 20
 
