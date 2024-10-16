@@ -27,6 +27,7 @@ SPOT_PRICE=${SPOT_PRICE:-0.05}
 KEY_PAIR_NAME=${KEY_PAIR_NAME:-""}
 YOUR_IP=${YOUR_IP:-$PUBLIC_IP}
 HOSTED_ZONE_ID=${HOSTED_ZONE_ID:-""}
+SUB_DOMAIN_PREFIX=${SUB_DOMAIN_PREFIX:-"factorio-"}
 ENABLE_RCON=${ENABLE_RCON:-false}
 UPDATE_MODS_ON_START=${UPDATE_MODS_ON_START:-false}
 
@@ -43,6 +44,51 @@ RECORD_NAME_3=${RECORD_NAME_3:-""}
 RECORD_NAME_4=${RECORD_NAME_4:-""}
 RECORD_NAME_5=${RECORD_NAME_5:-""}
 
+# Function to generate and upload factorio.config.json
+generate_and_upload_config() {
+    local config_content="{\n  \"routes\": {"
+    local first_entry=true
+
+    for i in seq 1 5
+    do
+        local route_name="ROUTE_NAME_$i"
+        if [ -n "${!route_name}" ]; then
+            if [ "$first_entry" = false ]; then
+                config_content="$config_content,"
+            fi
+            config_content="$config_content\n    \"server-$i\": \"${!route_name}\""
+            first_entry=false
+        fi
+    done
+
+    config_content="$config_content\n  }\n}"
+
+    # Create a temporary file
+    local temp_file=$(mktemp)
+
+    # Write JSON content to the temporary file
+    echo -e "$config_content" > "$temp_file"
+
+    # Display the content of the JSON file
+    echo "Generated JSON content:"
+    cat "$temp_file"
+    echo
+
+    # Upload the file to S3
+    local s3_bucket="${STACK_NAME}-config"
+    aws s3 cp "$temp_file" "s3://$s3_bucket/factorio.config.json"
+
+    # Check if the upload was successful
+    if [ $? -eq 0 ]; then
+        echo "Successfully uploaded factorio.config.json to s3://${s3_bucket}/"
+    else
+        echo "Failed to upload factorio.config.json to S3"
+    fi
+
+    # Remove the temporary file
+    rm "$temp_file"
+}
+
 # The update command
 
 update_stack() {
@@ -57,19 +103,19 @@ update_stack() {
         ParameterKey=KeyPairName,ParameterValue="$KEY_PAIR_NAME" \
         ParameterKey=YourIp,ParameterValue="$YOUR_IP" \
         ParameterKey=HostedZoneId,ParameterValue="$HOSTED_ZONE_ID" \
+        ParameterKey=SubDomainPrefix,ParameterValue="$SUB_DOMAIN_PREFIX" \
         ParameterKey=EnableRcon,ParameterValue="$ENABLE_RCON" \
         ParameterKey=UpdateModsOnStart,ParameterValue="$UPDATE_MODS_ON_START" \
         ParameterKey=ServerState1,ParameterValue="$SERVER_STATE_1" \
-        ParameterKey=RecordName1,ParameterValue="$RECORD_NAME_1" \
         ParameterKey=ServerState2,ParameterValue="$SERVER_STATE_2" \
-        ParameterKey=RecordName2,ParameterValue="$RECORD_NAME_2" \
         ParameterKey=ServerState3,ParameterValue="$SERVER_STATE_3" \
-        ParameterKey=RecordName3,ParameterValue="$RECORD_NAME_3" \
         ParameterKey=ServerState4,ParameterValue="$SERVER_STATE_4" \
-        ParameterKey=RecordName4,ParameterValue="$RECORD_NAME_4" \
         ParameterKey=ServerState5,ParameterValue="$SERVER_STATE_5" \
-        ParameterKey=RecordName5,ParameterValue="$RECORD_NAME_5" \
         --capabilities CAPABILITY_IAM
 }
 
+# Generate and upload the config file
+generate_and_upload_config
+
+# Update the CloudFormation stack
 update_stack

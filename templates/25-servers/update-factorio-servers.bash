@@ -27,6 +27,7 @@ SPOT_PRICE=${SPOT_PRICE:-0.05}
 KEY_PAIR_NAME=${KEY_PAIR_NAME:-""}
 YOUR_IP=${YOUR_IP:-$PUBLIC_IP}
 HOSTED_ZONE_ID=${HOSTED_ZONE_ID:-""}
+SUB_DOMAIN_PREFIX=${SUB_DOMAIN_PREFIX:-"factorio-"}
 ENABLE_RCON=${ENABLE_RCON:-false}
 UPDATE_MODS_ON_START=${UPDATE_MODS_ON_START:-false}
 
@@ -83,6 +84,51 @@ RECORD_NAME_23=${RECORD_NAME_23:-""}
 RECORD_NAME_24=${RECORD_NAME_24:-""}
 RECORD_NAME_25=${RECORD_NAME_25:-""}
 
+# Function to generate and upload factorio.config.json
+generate_and_upload_config() {
+    local config_content="{\n  \"routes\": {"
+    local first_entry=true
+
+    for i in seq 1 25
+    do
+        local route_name="ROUTE_NAME_$i"
+        if [ -n "${!route_name}" ]; then
+            if [ "$first_entry" = false ]; then
+                config_content="$config_content,"
+            fi
+            config_content="$config_content\n    \"server-$i\": \"${!route_name}\""
+            first_entry=false
+        fi
+    done
+
+    config_content="$config_content\n  }\n}"
+
+    # Create a temporary file
+    local temp_file=$(mktemp)
+
+    # Write JSON content to the temporary file
+    echo -e "$config_content" > "$temp_file"
+
+    # Display the content of the JSON file
+    echo "Generated JSON content:"
+    cat "$temp_file"
+    echo
+
+    # Upload the file to S3
+    local s3_bucket="${STACK_NAME}-config"
+    aws s3 cp "$temp_file" "s3://$s3_bucket/factorio.config.json"
+
+    # Check if the upload was successful
+    if [ $? -eq 0 ]; then
+        echo "Successfully uploaded factorio.config.json to s3://${s3_bucket}/"
+    else
+        echo "Failed to upload factorio.config.json to S3"
+    fi
+
+    # Remove the temporary file
+    rm "$temp_file"
+}
+
 # The update command
 
 update_stack() {
@@ -97,59 +143,39 @@ update_stack() {
         ParameterKey=KeyPairName,ParameterValue="$KEY_PAIR_NAME" \
         ParameterKey=YourIp,ParameterValue="$YOUR_IP" \
         ParameterKey=HostedZoneId,ParameterValue="$HOSTED_ZONE_ID" \
+        ParameterKey=SubDomainPrefix,ParameterValue="$SUB_DOMAIN_PREFIX" \
         ParameterKey=EnableRcon,ParameterValue="$ENABLE_RCON" \
         ParameterKey=UpdateModsOnStart,ParameterValue="$UPDATE_MODS_ON_START" \
         ParameterKey=ServerState1,ParameterValue="$SERVER_STATE_1" \
-        ParameterKey=RecordName1,ParameterValue="$RECORD_NAME_1" \
         ParameterKey=ServerState2,ParameterValue="$SERVER_STATE_2" \
-        ParameterKey=RecordName2,ParameterValue="$RECORD_NAME_2" \
         ParameterKey=ServerState3,ParameterValue="$SERVER_STATE_3" \
-        ParameterKey=RecordName3,ParameterValue="$RECORD_NAME_3" \
         ParameterKey=ServerState4,ParameterValue="$SERVER_STATE_4" \
-        ParameterKey=RecordName4,ParameterValue="$RECORD_NAME_4" \
         ParameterKey=ServerState5,ParameterValue="$SERVER_STATE_5" \
-        ParameterKey=RecordName5,ParameterValue="$RECORD_NAME_5" \
         ParameterKey=ServerState6,ParameterValue="$SERVER_STATE_6" \
-        ParameterKey=RecordName6,ParameterValue="$RECORD_NAME_6" \
         ParameterKey=ServerState7,ParameterValue="$SERVER_STATE_7" \
-        ParameterKey=RecordName7,ParameterValue="$RECORD_NAME_7" \
         ParameterKey=ServerState8,ParameterValue="$SERVER_STATE_8" \
-        ParameterKey=RecordName8,ParameterValue="$RECORD_NAME_8" \
         ParameterKey=ServerState9,ParameterValue="$SERVER_STATE_9" \
-        ParameterKey=RecordName9,ParameterValue="$RECORD_NAME_9" \
         ParameterKey=ServerState10,ParameterValue="$SERVER_STATE_10" \
-        ParameterKey=RecordName10,ParameterValue="$RECORD_NAME_10" \
         ParameterKey=ServerState11,ParameterValue="$SERVER_STATE_11" \
-        ParameterKey=RecordName11,ParameterValue="$RECORD_NAME_11" \
         ParameterKey=ServerState12,ParameterValue="$SERVER_STATE_12" \
-        ParameterKey=RecordName12,ParameterValue="$RECORD_NAME_12" \
         ParameterKey=ServerState13,ParameterValue="$SERVER_STATE_13" \
-        ParameterKey=RecordName13,ParameterValue="$RECORD_NAME_13" \
         ParameterKey=ServerState14,ParameterValue="$SERVER_STATE_14" \
-        ParameterKey=RecordName14,ParameterValue="$RECORD_NAME_14" \
         ParameterKey=ServerState15,ParameterValue="$SERVER_STATE_15" \
-        ParameterKey=RecordName15,ParameterValue="$RECORD_NAME_15" \
         ParameterKey=ServerState16,ParameterValue="$SERVER_STATE_16" \
-        ParameterKey=RecordName16,ParameterValue="$RECORD_NAME_16" \
         ParameterKey=ServerState17,ParameterValue="$SERVER_STATE_17" \
-        ParameterKey=RecordName17,ParameterValue="$RECORD_NAME_17" \
         ParameterKey=ServerState18,ParameterValue="$SERVER_STATE_18" \
-        ParameterKey=RecordName18,ParameterValue="$RECORD_NAME_18" \
         ParameterKey=ServerState19,ParameterValue="$SERVER_STATE_19" \
-        ParameterKey=RecordName19,ParameterValue="$RECORD_NAME_19" \
         ParameterKey=ServerState20,ParameterValue="$SERVER_STATE_20" \
-        ParameterKey=RecordName20,ParameterValue="$RECORD_NAME_20" \
         ParameterKey=ServerState21,ParameterValue="$SERVER_STATE_21" \
-        ParameterKey=RecordName21,ParameterValue="$RECORD_NAME_21" \
         ParameterKey=ServerState22,ParameterValue="$SERVER_STATE_22" \
-        ParameterKey=RecordName22,ParameterValue="$RECORD_NAME_22" \
         ParameterKey=ServerState23,ParameterValue="$SERVER_STATE_23" \
-        ParameterKey=RecordName23,ParameterValue="$RECORD_NAME_23" \
         ParameterKey=ServerState24,ParameterValue="$SERVER_STATE_24" \
-        ParameterKey=RecordName24,ParameterValue="$RECORD_NAME_24" \
         ParameterKey=ServerState25,ParameterValue="$SERVER_STATE_25" \
-        ParameterKey=RecordName25,ParameterValue="$RECORD_NAME_25" \
         --capabilities CAPABILITY_IAM
 }
 
+# Generate and upload the config file
+generate_and_upload_config
+
+# Update the CloudFormation stack
 update_stack
