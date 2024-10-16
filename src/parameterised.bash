@@ -78,6 +78,12 @@ HEADER_START
 
 for i in $(seq 1 $SERVERS)
 do
+DEFAULT_STATE="Stopped"
+if [ "x$i" == "x1" ];
+then
+  DEFAULT_STATE="Running"
+fi
+
 cat <<VARIABLE_PARAMETERS
   # ====================================================
   # ${i} - Server Specific Variables
@@ -86,7 +92,7 @@ cat <<VARIABLE_PARAMETERS
   ServerState${i}:
     Type: String
     Description: "Running: A spot instance for Server ${i} will launch shortly after setting this parameter; your Factorio server should start within 5-10 minutes of changing this parameter (once UPDATE_IN_PROGRESS becomes UPDATE_COMPLETE). Stopped: Your spot instance (and thus Factorio container) will be terminated shortly after setting this parameter."
-    Default: Running
+    Default: ${DEFAULT_STATE}
     AllowedValues:
     - Running
     - Stopped
@@ -354,6 +360,28 @@ Resources:
       Roles:
         - !Ref InstanceRole
 
+  EcsCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "\${AWS::StackName}-cluster"
+
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub \${AWS::StackName}-launch-template
+      LaunchTemplateData:
+        IamInstanceProfile:
+          Arn: !GetAtt InstanceProfile.Arn
+        ImageId: !Ref ECSAMI
+        SecurityGroupIds:
+        - !Ref Ec2Sg
+        KeyName:
+          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash -xe
+            echo ECS_CLUSTER=\${EcsCluster} >> /etc/ecs/ecs.config
+
 RESOURCES_START
 
 for i in $(seq 1 $SERVERS)
@@ -394,23 +422,6 @@ cat <<PARAM_BLOCK
   # ${i} - INSTANCE CONFIG
   # ====================================================
 
-  LaunchTemplate${i}:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub \${AWS::StackName}-launch-template-${i}
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=\${EcsCluster${i}} >> /etc/ecs/ecs.config
-
   AutoScalingGroup${i}:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -425,8 +436,8 @@ cat <<PARAM_BLOCK
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate${i}
-            Version: !GetAtt LaunchTemplate${i}.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -442,15 +453,10 @@ cat <<PARAM_BLOCK
         - !Ref SubnetA
         - !Ref SubnetB
 
-  EcsCluster${i}:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "\${AWS::StackName}-cluster-${i}"
-
   EcsService${i}:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster${i}
+      Cluster: !Ref EcsCluster
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState${i}, DesiredCapacity ]
       ServiceName: !Sub "\${AWS::StackName}-ecs-service-${i}"
       TaskDefinition: !Ref EcsTask${i}

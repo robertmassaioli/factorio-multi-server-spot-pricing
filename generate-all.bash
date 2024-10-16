@@ -2,7 +2,7 @@ TEMPLATE_DIR="${PWD}/templates"
 
 bash src/factorio-script.bash ${i} > "${TEMPLATE_DIR}/1-server/update-factorio-servers.bash"
 
-for i in 5 10 15 20 40
+for i in 5 10 20 40 80
 do
   echo "Generating $i..."
   SERVER_DIR="${TEMPLATE_DIR}/${i}-servers"
