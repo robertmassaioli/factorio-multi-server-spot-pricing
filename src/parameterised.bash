@@ -534,7 +534,7 @@ cat <<DNS_START
   S3ConfigBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref S3ConfigBucketName
+      BucketName: !Sub "\${AWS::StackName}-config"
       VersioningConfiguration:
         Status: Enabled
       BucketEncryption:
