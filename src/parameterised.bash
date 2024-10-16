@@ -2,7 +2,7 @@ SERVERS=$1
 
 cat <<HEADER_START
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Factorio Spot Price Servers () via Docker / ECS
+Description: Factorio Spot Price Servers (${SERVERS}) via Docker / ECS
 Parameters:
 
   ECSAMI:
@@ -330,6 +330,13 @@ Resources:
       FileSystemTags:
       - Key: Name
         Value: !Sub "\${AWS::StackName}-fs"
+      FileSystemPolicy:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action: elasticfilesystem:ClientWrite
+            Resource: '*'
 
   MountA:
     Type: AWS::EFS::MountTarget
@@ -359,194 +366,7 @@ Resources:
         SourceSecurityGroupId: !Ref Ec2Sg
       VpcId: !Ref Vpc
 
-
-  LambdaSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Security group for Lambda function
-      VpcId: !Ref Vpc
-      SecurityGroupEgress:
-        - IpProtocol: tcp
-          FromPort: 2049
-          ToPort: 2049
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 443
-          ToPort: 443
-          CidrIp: 0.0.0.0/0
-
-  CloudFormationVPCEndpoint:
-    Type: AWS::EC2::VPCEndpoint
-    Properties:
-      ServiceName: !Sub "com.amazonaws.\${AWS::Region}.cloudformation"
-      VpcId: !Ref Vpc
-      PrivateDnsEnabled: true
-      VpcEndpointType: Interface
-      SubnetIds:
-        - !Ref SubnetA
-        - !Ref SubnetB
-      SecurityGroupIds:
-        - !Ref LambdaSecurityGroup
-
-  S3VPCEndpoint:
-    Type: AWS::EC2::VPCEndpoint
-    Properties:
-      ServiceName: !Sub "com.amazonaws.\${AWS::Region}.s3"
-      VpcId: !Ref Vpc
-      RouteTableIds:
-        - !Ref RouteTable
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal: "*"
-            Action:
-              - "s3:*"
-            Resource: "*"
-
-  LambdaExecutionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
-        - arn:aws:iam::aws:policy/AmazonElasticFileSystemClientReadWriteAccess
-      Policies:
-        - PolicyName: EfsAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - elasticfilesystem:ClientMount
-                  - elasticfilesystem:ClientWrite
-                Resource: !GetAtt Efs.Arn
-        - PolicyName: LambdaVPCAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - ec2:CreateNetworkInterface
-                  - ec2:DescribeNetworkInterfaces
-                  - ec2:DeleteNetworkInterface
-                Resource: '*'
-        - PolicyName: CloudFormationAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - cloudformation:SignalResource
-                Resource: '*'
-
-  CreateDirectoriesLambdaPermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !GetAtt CreateDirectoriesFunction.Arn
-      Action: lambda:InvokeFunction
-      Principal: cloudformation.amazonaws.com
-
-  CreateDirectoriesFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      Handler: index.handler
-      Role: !GetAtt LambdaExecutionRole.Arn
-      Code:
-        ZipFile: |
-          import cfnresponse
-          import boto3
-          import os
-          import errno
-          import logging
-
-          # Set up logging
-          logger = logging.getLogger()
-          logger.setLevel(logging.INFO)
-
-          def handler(event, context):
-              logger.info(f"Event received: {event}")
-              try:
-                  if event['RequestType'] in ['Create', 'Update']:
-                      efs_id = event['ResourceProperties']['EfsFileSystemId']
-                      directory_names = event['ResourceProperties']['DirectoryNames']
-
-                      logger.info(f"EFS ID: {efs_id}")
-                      logger.info(f"Directories to create: {directory_names}")
-
-                      # Mount EFS
-                      mount_path = '/mnt/efs'
-                      logger.info(f"Creating mount path: {mount_path}")
-                      os.makedirs(mount_path, exist_ok=True)
-
-                      mount_command = f'mount -t nfs4 -o rw,nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport {efs_id}.efs.{os.environ["AWS_REGION"]}.amazonaws.com:/ {mount_path}'
-                      logger.info(f"Mounting EFS with command: {mount_command}")
-                      mount_result = os.system(mount_command)
-                      logger.info(f"Mount command result: {mount_result}")
-
-                      # Create directories
-                      created_dirs = []
-                      for directory_name in directory_names:
-                          dir_path = os.path.join(mount_path, directory_name)
-                          logger.info(f"Attempting to create directory: {dir_path}")
-                          try:
-                              os.makedirs(dir_path)
-                              created_dirs.append(directory_name)
-                              logger.info(f"Successfully created directory: {dir_path}")
-                          except OSError as exc:
-                              if exc.errno != errno.EEXIST:
-                                  logger.error(f"Failed to create directory {dir_path}: {exc}")
-                                  raise
-                              else:
-                                  logger.warning(f"Directory already exists: {dir_path}")
-
-                      # Unmount EFS
-                      logger.info(f"Unmounting EFS from {mount_path}")
-                      unmount_result = os.system(f'umount {mount_path}')
-                      logger.info(f"Unmount command result: {unmount_result}")
-
-                      success_message = f'Directories created successfully: {", ".join(created_dirs)}'
-                      logger.info(success_message)
-                      cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Message': success_message})
-                  elif event['RequestType'] == 'Delete':
-                      logger.info("Delete request received. No action taken.")
-                      cfnresponse.send(event, context, cfnresponse.SUCCESS, {'Message': 'Delete request acknowledged'})
-              except Exception as e:
-                  logger.error(f"Error occurred: {str(e)}", exc_info=True)
-                  cfnresponse.send(event, context, cfnresponse.FAILED, {'Error': str(e)})
-
-      Runtime: python3.8
-      Timeout: 300
-      VpcConfig:
-        SecurityGroupIds:
-          - !Ref LambdaSecurityGroup
-        SubnetIds:
-          - !Ref SubnetA
-          - !Ref SubnetB
-
-  CreateEFSSubdirectories:
-    Type: Custom::CreateDirectories
-    DependsOn:
-      - MountA
-      - MountB
-    Properties:
-      ServiceToken: !GetAtt CreateDirectoriesFunction.Arn
-      EfsFileSystemId: !Ref Efs
-      DirectoryNames:
 RESOURCES_START
-
-for i in $(seq 1 $SERVERS)
-do
-cat <<SUB_DIRECTORIES_EFS
-        - factorio-${i}
-SUB_DIRECTORIES_EFS
-done
 
 cat <<EC2_COMMON_RESOURCES
 
@@ -653,19 +473,35 @@ cat <<PARAM_BLOCK
         MaximumPercent: 100
         MinimumHealthyPercent: 0
 
+  EFSAccessPoint${i}:
+    Type: AWS::EFS::AccessPoint
+    Properties:
+      FileSystemId: !Ref Efs
+      PosixUser:
+        Uid: '1000'
+        Gid: '1000'
+      RootDirectory:
+        Path: /factorio-${i}
+        CreationInfo:
+          OwnerGid: '1000'
+          OwnerUid: '1000'
+          Permissions: '0755'
+
   EcsTask${i}:
     Type: AWS::ECS::TaskDefinition
     DependsOn:
     - MountA
     - MountB
-    - CreateEFSSubdirectories
     Properties:
       Volumes:
       - Name: !Sub "\${AWS::StackName}-factorio-${i}"
         EFSVolumeConfiguration:
           FilesystemId: !Ref Efs
           TransitEncryption: ENABLED
-          RootDirectory: /factorio-${i}
+          RootDirectory: /
+          AuthorizationConfig:
+            AccessPointId: !Ref EFSAccessPoint${i}
+            Iam: ENABLED
       ContainerDefinitions:
         - Name: factorio
           MemoryReservation: 1024
