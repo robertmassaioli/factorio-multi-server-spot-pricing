@@ -52,6 +52,11 @@ SERVER_STATE_17=${SERVER_STATE_17:-Stopped}
 SERVER_STATE_18=${SERVER_STATE_18:-Stopped}
 SERVER_STATE_19=${SERVER_STATE_19:-Stopped}
 SERVER_STATE_20=${SERVER_STATE_20:-Stopped}
+SERVER_STATE_21=${SERVER_STATE_21:-Stopped}
+SERVER_STATE_22=${SERVER_STATE_22:-Stopped}
+SERVER_STATE_23=${SERVER_STATE_23:-Stopped}
+SERVER_STATE_24=${SERVER_STATE_24:-Stopped}
+SERVER_STATE_25=${SERVER_STATE_25:-Stopped}
 RECORD_NAME_1=${RECORD_NAME_1:-""}
 RECORD_NAME_2=${RECORD_NAME_2:-""}
 RECORD_NAME_3=${RECORD_NAME_3:-""}
@@ -72,6 +77,11 @@ RECORD_NAME_17=${RECORD_NAME_17:-""}
 RECORD_NAME_18=${RECORD_NAME_18:-""}
 RECORD_NAME_19=${RECORD_NAME_19:-""}
 RECORD_NAME_20=${RECORD_NAME_20:-""}
+RECORD_NAME_21=${RECORD_NAME_21:-""}
+RECORD_NAME_22=${RECORD_NAME_22:-""}
+RECORD_NAME_23=${RECORD_NAME_23:-""}
+RECORD_NAME_24=${RECORD_NAME_24:-""}
+RECORD_NAME_25=${RECORD_NAME_25:-""}
 
 # The update command
 
@@ -129,6 +139,16 @@ update_stack() {
         ParameterKey=RecordName19,ParameterValue="$RECORD_NAME_19" \
         ParameterKey=ServerState20,ParameterValue="$SERVER_STATE_20" \
         ParameterKey=RecordName20,ParameterValue="$RECORD_NAME_20" \
+        ParameterKey=ServerState21,ParameterValue="$SERVER_STATE_21" \
+        ParameterKey=RecordName21,ParameterValue="$RECORD_NAME_21" \
+        ParameterKey=ServerState22,ParameterValue="$SERVER_STATE_22" \
+        ParameterKey=RecordName22,ParameterValue="$RECORD_NAME_22" \
+        ParameterKey=ServerState23,ParameterValue="$SERVER_STATE_23" \
+        ParameterKey=RecordName23,ParameterValue="$RECORD_NAME_23" \
+        ParameterKey=ServerState24,ParameterValue="$SERVER_STATE_24" \
+        ParameterKey=RecordName24,ParameterValue="$RECORD_NAME_24" \
+        ParameterKey=ServerState25,ParameterValue="$SERVER_STATE_25" \
+        ParameterKey=RecordName25,ParameterValue="$RECORD_NAME_25" \
         --capabilities CAPABILITY_IAM
 }
 

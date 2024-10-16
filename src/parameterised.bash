@@ -142,6 +142,7 @@ cat <<METADATA_MID_1
           default: DNS Configuration (Optional)
         Parameters:
         - HostedZoneId
+        - SubDomainPrefix
 METADATA_MID_1
 
 cat <<PARAMETER_LABELS_START
@@ -156,6 +157,8 @@ cat <<PARAMETER_LABELS_START
         default: "If you wish to access the instance via SSH, provide your public IP address."
       HostedZoneId:
         default: "If you have a hosted zone in Route 53 and wish to update a DNS record whenever your Factorio instance starts, supply the hosted zone ID here."
+      SubDomainPrefix:
+        default: "If you have a hosted zone in Route 53, provide the sub domain prefix for the generation of routes per server."
       EnableRcon:
         default: "Do you wish to enable RCON?"
       UpdateModsOnStart:
@@ -167,8 +170,6 @@ do
 cat <<VAR_PARAMATER_LABEL
       ServerState${i}:
         default: "Update this parameter to shut down / start up your Factorio server ${i} as required to save on cost. Takes a few minutes to take effect."
-      RecordName${i}:
-        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server ${i} starts, supply a record name here (e.g. factorio.mydomain.com)."
 VAR_PARAMATER_LABEL
 done
 
@@ -177,24 +178,13 @@ Conditions:
   KeyPairNameProvided: !Not [ !Equals [ !Ref KeyPairName, '' ] ]
   IpAddressProvided: !Not [ !Equals [ !Ref YourIp, '' ] ]
   DoEnableRcon: !Equals [ !Ref EnableRcon, 'true' ]
-  DnsConfigEnabled: !Not [ !Equals [ !Ref HostedZoneId, '' ] ]
+  DnsConfigEnabled:
+    !And
+      - !Not [!Equals [!Ref HostedZoneId, '']]
+      - !Not [!Equals [!Ref SubDomainPrefix, '']]
   UsingSpotInstance: !Equals [ !Ref InstancePurchaseMode, 'Spot' ]
   InstanceTypeProvided: !Not [ !Equals [ !Ref InstanceType, '' ] ]
 CONDITIONS_START
-
-# You can't have more than 20 conditions in an or block
-# Generate the condition
-# condition="  DnsConfigEnabled: !And\n"
-# condition+="  - !Not [!Equals [!Ref HostedZoneId, '']]\n"
-
-# condition+="  - !Or\n"
-
-# for i in $(seq 1 $SERVERS); do
-#     condition+="    - !Not [!Equals [!Ref RecordName$i, '']]\n"
-# done
-
-# Output the condition
-# echo -e "$condition"
 
 cat <<MAPPINGS_SECTION
 
@@ -353,28 +343,6 @@ Resources:
       Roles:
         - !Ref InstanceRole
 
-  EcsCluster:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "\${AWS::StackName}-cluster"
-
-  LaunchTemplate:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub \${AWS::StackName}-launch-template
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=\${EcsCluster} >> /etc/ecs/ecs.config
-
 RESOURCES_START
 
 for i in $(seq 1 $SERVERS)
@@ -445,6 +413,28 @@ cat <<PARAM_BLOCK
       VPCZoneIdentifier:
         - !Ref SubnetA
         - !Ref SubnetB
+
+  EcsCluster${i}:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "\${AWS::StackName}-cluster-${i}"
+
+  LaunchTemplate${i}:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub \${AWS::StackName}-launch-template-${i}
+      LaunchTemplateData:
+        IamInstanceProfile:
+          Arn: !GetAtt InstanceProfile.Arn
+        ImageId: !Ref ECSAMI
+        SecurityGroupIds:
+        - !Ref Ec2Sg
+        KeyName:
+          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash -xe
+            echo ECS_CLUSTER=\${EcsCluster${i}} >> /etc/ecs/ecs.config
 
   EcsService${i}:
     Type: AWS::ECS::Service

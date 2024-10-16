@@ -82,36 +82,6 @@ SERVER_STATE_47=${SERVER_STATE_47:-Stopped}
 SERVER_STATE_48=${SERVER_STATE_48:-Stopped}
 SERVER_STATE_49=${SERVER_STATE_49:-Stopped}
 SERVER_STATE_50=${SERVER_STATE_50:-Stopped}
-SERVER_STATE_51=${SERVER_STATE_51:-Stopped}
-SERVER_STATE_52=${SERVER_STATE_52:-Stopped}
-SERVER_STATE_53=${SERVER_STATE_53:-Stopped}
-SERVER_STATE_54=${SERVER_STATE_54:-Stopped}
-SERVER_STATE_55=${SERVER_STATE_55:-Stopped}
-SERVER_STATE_56=${SERVER_STATE_56:-Stopped}
-SERVER_STATE_57=${SERVER_STATE_57:-Stopped}
-SERVER_STATE_58=${SERVER_STATE_58:-Stopped}
-SERVER_STATE_59=${SERVER_STATE_59:-Stopped}
-SERVER_STATE_60=${SERVER_STATE_60:-Stopped}
-SERVER_STATE_61=${SERVER_STATE_61:-Stopped}
-SERVER_STATE_62=${SERVER_STATE_62:-Stopped}
-SERVER_STATE_63=${SERVER_STATE_63:-Stopped}
-SERVER_STATE_64=${SERVER_STATE_64:-Stopped}
-SERVER_STATE_65=${SERVER_STATE_65:-Stopped}
-SERVER_STATE_66=${SERVER_STATE_66:-Stopped}
-SERVER_STATE_67=${SERVER_STATE_67:-Stopped}
-SERVER_STATE_68=${SERVER_STATE_68:-Stopped}
-SERVER_STATE_69=${SERVER_STATE_69:-Stopped}
-SERVER_STATE_70=${SERVER_STATE_70:-Stopped}
-SERVER_STATE_71=${SERVER_STATE_71:-Stopped}
-SERVER_STATE_72=${SERVER_STATE_72:-Stopped}
-SERVER_STATE_73=${SERVER_STATE_73:-Stopped}
-SERVER_STATE_74=${SERVER_STATE_74:-Stopped}
-SERVER_STATE_75=${SERVER_STATE_75:-Stopped}
-SERVER_STATE_76=${SERVER_STATE_76:-Stopped}
-SERVER_STATE_77=${SERVER_STATE_77:-Stopped}
-SERVER_STATE_78=${SERVER_STATE_78:-Stopped}
-SERVER_STATE_79=${SERVER_STATE_79:-Stopped}
-SERVER_STATE_80=${SERVER_STATE_80:-Stopped}
 RECORD_NAME_1=${RECORD_NAME_1:-""}
 RECORD_NAME_2=${RECORD_NAME_2:-""}
 RECORD_NAME_3=${RECORD_NAME_3:-""}
@@ -162,36 +132,6 @@ RECORD_NAME_47=${RECORD_NAME_47:-""}
 RECORD_NAME_48=${RECORD_NAME_48:-""}
 RECORD_NAME_49=${RECORD_NAME_49:-""}
 RECORD_NAME_50=${RECORD_NAME_50:-""}
-RECORD_NAME_51=${RECORD_NAME_51:-""}
-RECORD_NAME_52=${RECORD_NAME_52:-""}
-RECORD_NAME_53=${RECORD_NAME_53:-""}
-RECORD_NAME_54=${RECORD_NAME_54:-""}
-RECORD_NAME_55=${RECORD_NAME_55:-""}
-RECORD_NAME_56=${RECORD_NAME_56:-""}
-RECORD_NAME_57=${RECORD_NAME_57:-""}
-RECORD_NAME_58=${RECORD_NAME_58:-""}
-RECORD_NAME_59=${RECORD_NAME_59:-""}
-RECORD_NAME_60=${RECORD_NAME_60:-""}
-RECORD_NAME_61=${RECORD_NAME_61:-""}
-RECORD_NAME_62=${RECORD_NAME_62:-""}
-RECORD_NAME_63=${RECORD_NAME_63:-""}
-RECORD_NAME_64=${RECORD_NAME_64:-""}
-RECORD_NAME_65=${RECORD_NAME_65:-""}
-RECORD_NAME_66=${RECORD_NAME_66:-""}
-RECORD_NAME_67=${RECORD_NAME_67:-""}
-RECORD_NAME_68=${RECORD_NAME_68:-""}
-RECORD_NAME_69=${RECORD_NAME_69:-""}
-RECORD_NAME_70=${RECORD_NAME_70:-""}
-RECORD_NAME_71=${RECORD_NAME_71:-""}
-RECORD_NAME_72=${RECORD_NAME_72:-""}
-RECORD_NAME_73=${RECORD_NAME_73:-""}
-RECORD_NAME_74=${RECORD_NAME_74:-""}
-RECORD_NAME_75=${RECORD_NAME_75:-""}
-RECORD_NAME_76=${RECORD_NAME_76:-""}
-RECORD_NAME_77=${RECORD_NAME_77:-""}
-RECORD_NAME_78=${RECORD_NAME_78:-""}
-RECORD_NAME_79=${RECORD_NAME_79:-""}
-RECORD_NAME_80=${RECORD_NAME_80:-""}
 
 # The update command
 
@@ -309,66 +249,6 @@ update_stack() {
         ParameterKey=RecordName49,ParameterValue="$RECORD_NAME_49" \
         ParameterKey=ServerState50,ParameterValue="$SERVER_STATE_50" \
         ParameterKey=RecordName50,ParameterValue="$RECORD_NAME_50" \
-        ParameterKey=ServerState51,ParameterValue="$SERVER_STATE_51" \
-        ParameterKey=RecordName51,ParameterValue="$RECORD_NAME_51" \
-        ParameterKey=ServerState52,ParameterValue="$SERVER_STATE_52" \
-        ParameterKey=RecordName52,ParameterValue="$RECORD_NAME_52" \
-        ParameterKey=ServerState53,ParameterValue="$SERVER_STATE_53" \
-        ParameterKey=RecordName53,ParameterValue="$RECORD_NAME_53" \
-        ParameterKey=ServerState54,ParameterValue="$SERVER_STATE_54" \
-        ParameterKey=RecordName54,ParameterValue="$RECORD_NAME_54" \
-        ParameterKey=ServerState55,ParameterValue="$SERVER_STATE_55" \
-        ParameterKey=RecordName55,ParameterValue="$RECORD_NAME_55" \
-        ParameterKey=ServerState56,ParameterValue="$SERVER_STATE_56" \
-        ParameterKey=RecordName56,ParameterValue="$RECORD_NAME_56" \
-        ParameterKey=ServerState57,ParameterValue="$SERVER_STATE_57" \
-        ParameterKey=RecordName57,ParameterValue="$RECORD_NAME_57" \
-        ParameterKey=ServerState58,ParameterValue="$SERVER_STATE_58" \
-        ParameterKey=RecordName58,ParameterValue="$RECORD_NAME_58" \
-        ParameterKey=ServerState59,ParameterValue="$SERVER_STATE_59" \
-        ParameterKey=RecordName59,ParameterValue="$RECORD_NAME_59" \
-        ParameterKey=ServerState60,ParameterValue="$SERVER_STATE_60" \
-        ParameterKey=RecordName60,ParameterValue="$RECORD_NAME_60" \
-        ParameterKey=ServerState61,ParameterValue="$SERVER_STATE_61" \
-        ParameterKey=RecordName61,ParameterValue="$RECORD_NAME_61" \
-        ParameterKey=ServerState62,ParameterValue="$SERVER_STATE_62" \
-        ParameterKey=RecordName62,ParameterValue="$RECORD_NAME_62" \
-        ParameterKey=ServerState63,ParameterValue="$SERVER_STATE_63" \
-        ParameterKey=RecordName63,ParameterValue="$RECORD_NAME_63" \
-        ParameterKey=ServerState64,ParameterValue="$SERVER_STATE_64" \
-        ParameterKey=RecordName64,ParameterValue="$RECORD_NAME_64" \
-        ParameterKey=ServerState65,ParameterValue="$SERVER_STATE_65" \
-        ParameterKey=RecordName65,ParameterValue="$RECORD_NAME_65" \
-        ParameterKey=ServerState66,ParameterValue="$SERVER_STATE_66" \
-        ParameterKey=RecordName66,ParameterValue="$RECORD_NAME_66" \
-        ParameterKey=ServerState67,ParameterValue="$SERVER_STATE_67" \
-        ParameterKey=RecordName67,ParameterValue="$RECORD_NAME_67" \
-        ParameterKey=ServerState68,ParameterValue="$SERVER_STATE_68" \
-        ParameterKey=RecordName68,ParameterValue="$RECORD_NAME_68" \
-        ParameterKey=ServerState69,ParameterValue="$SERVER_STATE_69" \
-        ParameterKey=RecordName69,ParameterValue="$RECORD_NAME_69" \
-        ParameterKey=ServerState70,ParameterValue="$SERVER_STATE_70" \
-        ParameterKey=RecordName70,ParameterValue="$RECORD_NAME_70" \
-        ParameterKey=ServerState71,ParameterValue="$SERVER_STATE_71" \
-        ParameterKey=RecordName71,ParameterValue="$RECORD_NAME_71" \
-        ParameterKey=ServerState72,ParameterValue="$SERVER_STATE_72" \
-        ParameterKey=RecordName72,ParameterValue="$RECORD_NAME_72" \
-        ParameterKey=ServerState73,ParameterValue="$SERVER_STATE_73" \
-        ParameterKey=RecordName73,ParameterValue="$RECORD_NAME_73" \
-        ParameterKey=ServerState74,ParameterValue="$SERVER_STATE_74" \
-        ParameterKey=RecordName74,ParameterValue="$RECORD_NAME_74" \
-        ParameterKey=ServerState75,ParameterValue="$SERVER_STATE_75" \
-        ParameterKey=RecordName75,ParameterValue="$RECORD_NAME_75" \
-        ParameterKey=ServerState76,ParameterValue="$SERVER_STATE_76" \
-        ParameterKey=RecordName76,ParameterValue="$RECORD_NAME_76" \
-        ParameterKey=ServerState77,ParameterValue="$SERVER_STATE_77" \
-        ParameterKey=RecordName77,ParameterValue="$RECORD_NAME_77" \
-        ParameterKey=ServerState78,ParameterValue="$SERVER_STATE_78" \
-        ParameterKey=RecordName78,ParameterValue="$RECORD_NAME_78" \
-        ParameterKey=ServerState79,ParameterValue="$SERVER_STATE_79" \
-        ParameterKey=RecordName79,ParameterValue="$RECORD_NAME_79" \
-        ParameterKey=ServerState80,ParameterValue="$SERVER_STATE_80" \
-        ParameterKey=RecordName80,ParameterValue="$RECORD_NAME_80" \
         --capabilities CAPABILITY_IAM
 }
 

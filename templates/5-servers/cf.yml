@@ -167,6 +167,7 @@ Metadata:
           default: DNS Configuration (Optional)
         Parameters:
         - HostedZoneId
+        - SubDomainPrefix
     ParameterLabels:
       FactorioImageTag:
         default: "Which version of Factorio do you want to launch?"
@@ -178,35 +179,30 @@ Metadata:
         default: "If you wish to access the instance via SSH, provide your public IP address."
       HostedZoneId:
         default: "If you have a hosted zone in Route 53 and wish to update a DNS record whenever your Factorio instance starts, supply the hosted zone ID here."
+      SubDomainPrefix:
+        default: "If you have a hosted zone in Route 53, provide the sub domain prefix for the generation of routes per server."
       EnableRcon:
         default: "Do you wish to enable RCON?"
       UpdateModsOnStart:
         default: "Do you wish to update your mods on container start"
       ServerState1:
         default: "Update this parameter to shut down / start up your Factorio server 1 as required to save on cost. Takes a few minutes to take effect."
-      RecordName1:
-        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 1 starts, supply a record name here (e.g. factorio.mydomain.com)."
       ServerState2:
         default: "Update this parameter to shut down / start up your Factorio server 2 as required to save on cost. Takes a few minutes to take effect."
-      RecordName2:
-        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 2 starts, supply a record name here (e.g. factorio.mydomain.com)."
       ServerState3:
         default: "Update this parameter to shut down / start up your Factorio server 3 as required to save on cost. Takes a few minutes to take effect."
-      RecordName3:
-        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 3 starts, supply a record name here (e.g. factorio.mydomain.com)."
       ServerState4:
         default: "Update this parameter to shut down / start up your Factorio server 4 as required to save on cost. Takes a few minutes to take effect."
-      RecordName4:
-        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 4 starts, supply a record name here (e.g. factorio.mydomain.com)."
       ServerState5:
         default: "Update this parameter to shut down / start up your Factorio server 5 as required to save on cost. Takes a few minutes to take effect."
-      RecordName5:
-        default: "If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance server 5 starts, supply a record name here (e.g. factorio.mydomain.com)."
 Conditions:
   KeyPairNameProvided: !Not [ !Equals [ !Ref KeyPairName, '' ] ]
   IpAddressProvided: !Not [ !Equals [ !Ref YourIp, '' ] ]
   DoEnableRcon: !Equals [ !Ref EnableRcon, 'true' ]
-  DnsConfigEnabled: !Not [ !Equals [ !Ref HostedZoneId, '' ] ]
+  DnsConfigEnabled:
+    !And
+      - !Not [!Equals [!Ref HostedZoneId, '']]
+      - !Not [!Equals [!Ref SubDomainPrefix, '']]
   UsingSpotInstance: !Equals [ !Ref InstancePurchaseMode, 'Spot' ]
   InstanceTypeProvided: !Not [ !Equals [ !Ref InstanceType, '' ] ]
 
@@ -362,28 +358,6 @@ Resources:
       Roles:
         - !Ref InstanceRole
 
-  EcsCluster:
-    Type: AWS::ECS::Cluster
-    Properties:
-      ClusterName: !Sub "${AWS::StackName}-cluster"
-
-  LaunchTemplate:
-    Type: AWS::EC2::LaunchTemplate
-    Properties:
-      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template
-      LaunchTemplateData:
-        IamInstanceProfile:
-          Arn: !GetAtt InstanceProfile.Arn
-        ImageId: !Ref ECSAMI
-        SecurityGroupIds:
-        - !Ref Ec2Sg
-        KeyName:
-          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
-        UserData:
-          Fn::Base64: !Sub |
-            #!/bin/bash -xe
-            echo ECS_CLUSTER=${EcsCluster} >> /etc/ecs/ecs.config
-
   # ====================================================
   # 1 - EFS FOR PERSISTENT DATA
   # ====================================================
@@ -449,6 +423,28 @@ Resources:
       VPCZoneIdentifier:
         - !Ref SubnetA
         - !Ref SubnetB
+
+  EcsCluster1:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "${AWS::StackName}-cluster-1"
+
+  LaunchTemplate1:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-1
+      LaunchTemplateData:
+        IamInstanceProfile:
+          Arn: !GetAtt InstanceProfile.Arn
+        ImageId: !Ref ECSAMI
+        SecurityGroupIds:
+        - !Ref Ec2Sg
+        KeyName:
+          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash -xe
+            echo ECS_CLUSTER=${EcsCluster1} >> /etc/ecs/ecs.config
 
   EcsService1:
     Type: AWS::ECS::Service
@@ -557,6 +553,28 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
+  EcsCluster2:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "${AWS::StackName}-cluster-2"
+
+  LaunchTemplate2:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-2
+      LaunchTemplateData:
+        IamInstanceProfile:
+          Arn: !GetAtt InstanceProfile.Arn
+        ImageId: !Ref ECSAMI
+        SecurityGroupIds:
+        - !Ref Ec2Sg
+        KeyName:
+          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash -xe
+            echo ECS_CLUSTER=${EcsCluster2} >> /etc/ecs/ecs.config
+
   EcsService2:
     Type: AWS::ECS::Service
     Properties:
@@ -663,6 +681,28 @@ Resources:
       VPCZoneIdentifier:
         - !Ref SubnetA
         - !Ref SubnetB
+
+  EcsCluster3:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "${AWS::StackName}-cluster-3"
+
+  LaunchTemplate3:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-3
+      LaunchTemplateData:
+        IamInstanceProfile:
+          Arn: !GetAtt InstanceProfile.Arn
+        ImageId: !Ref ECSAMI
+        SecurityGroupIds:
+        - !Ref Ec2Sg
+        KeyName:
+          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash -xe
+            echo ECS_CLUSTER=${EcsCluster3} >> /etc/ecs/ecs.config
 
   EcsService3:
     Type: AWS::ECS::Service
@@ -771,6 +811,28 @@ Resources:
         - !Ref SubnetA
         - !Ref SubnetB
 
+  EcsCluster4:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "${AWS::StackName}-cluster-4"
+
+  LaunchTemplate4:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-4
+      LaunchTemplateData:
+        IamInstanceProfile:
+          Arn: !GetAtt InstanceProfile.Arn
+        ImageId: !Ref ECSAMI
+        SecurityGroupIds:
+        - !Ref Ec2Sg
+        KeyName:
+          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash -xe
+            echo ECS_CLUSTER=${EcsCluster4} >> /etc/ecs/ecs.config
+
   EcsService4:
     Type: AWS::ECS::Service
     Properties:
@@ -877,6 +939,28 @@ Resources:
       VPCZoneIdentifier:
         - !Ref SubnetA
         - !Ref SubnetB
+
+  EcsCluster5:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "${AWS::StackName}-cluster-5"
+
+  LaunchTemplate5:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template-5
+      LaunchTemplateData:
+        IamInstanceProfile:
+          Arn: !GetAtt InstanceProfile.Arn
+        ImageId: !Ref ECSAMI
+        SecurityGroupIds:
+        - !Ref Ec2Sg
+        KeyName:
+          !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash -xe
+            echo ECS_CLUSTER=${EcsCluster5} >> /etc/ecs/ecs.config
 
   EcsService5:
     Type: AWS::ECS::Service
