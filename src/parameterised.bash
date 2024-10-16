@@ -2,7 +2,7 @@ SERVERS=$1
 
 cat <<HEADER_START
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Factorio Spot Price Servers () via Docker / ECS
+Description: Factorio Spot Price Servers (${SERVERS}) via Docker / ECS
 Parameters:
 
   ECSAMI:
@@ -283,6 +283,44 @@ Resources:
       GatewayId: !Ref InternetGateway
       RouteTableId: !Ref RouteTable
 
+  EfsSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "\${AWS::StackName}-efs"
+      GroupDescription: !Sub "\${AWS::StackName}-efs"
+      SecurityGroupIngress:
+      - FromPort: 2049
+        ToPort: 2049
+        IpProtocol: tcp
+        SourceSecurityGroupId: !Ref Ec2Sg
+      VpcId: !Ref Vpc
+
+  Ec2Sg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "\${AWS::StackName}-ec2"
+      GroupDescription: !Sub "\${AWS::StackName}-ec2"
+      SecurityGroupIngress:
+      - !If
+        - IpAddressProvided
+        - FromPort: 22
+          ToPort: 22
+          IpProtocol: tcp
+          CidrIp: !Sub "\${YourIp}/32"
+        - !Ref 'AWS::NoValue'
+      - FromPort: 34197
+        ToPort: 34197
+        IpProtocol: udp
+        CidrIp: 0.0.0.0/0
+      - !If
+        - DoEnableRcon
+        - FromPort: 27015
+          ToPort: 27015
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+        - !Ref 'AWS::NoValue'
+      VpcId: !Ref Vpc
+
   # ====================================================
   # Common Resources
   # ====================================================
@@ -341,7 +379,7 @@ cat <<PARAM_BLOCK
     Properties:
       FileSystemId: !Ref Efs${i}
       SecurityGroups:
-      - !Ref EfsSg${i}
+      - !Ref EfsSg
       SubnetId: !Ref SubnetA
 
   Mount${i}B:
@@ -349,50 +387,12 @@ cat <<PARAM_BLOCK
     Properties:
       FileSystemId: !Ref Efs${i}
       SecurityGroups:
-      - !Ref EfsSg${i}
+      - !Ref EfsSg
       SubnetId: !Ref SubnetB
 
-  EfsSg${i}:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "\${AWS::StackName}-efs-${i}"
-      GroupDescription: !Sub "\${AWS::StackName}-efs-${i}"
-      SecurityGroupIngress:
-      - FromPort: 2049
-        ToPort: 2049
-        IpProtocol: tcp
-        SourceSecurityGroupId: !Ref Ec2Sg${i}
-      VpcId: !Ref Vpc
-
   # ====================================================
-  # INSTANCE CONFIG - ${1}
+  # ${i} - INSTANCE CONFIG
   # ====================================================
-
-  Ec2Sg${i}:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub "\${AWS::StackName}-ec2-${i}"
-      GroupDescription: !Sub "\${AWS::StackName}-ec2-${i}"
-      SecurityGroupIngress:
-      - !If
-        - IpAddressProvided
-        - FromPort: 22
-          ToPort: 22
-          IpProtocol: tcp
-          CidrIp: !Sub "\${YourIp}/32"
-        - !Ref 'AWS::NoValue'
-      - FromPort: 34197
-        ToPort: 34197
-        IpProtocol: udp
-        CidrIp: 0.0.0.0/0
-      - !If
-        - DoEnableRcon
-        - FromPort: 27015
-          ToPort: 27015
-          IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-        - !Ref 'AWS::NoValue'
-      VpcId: !Ref Vpc
 
   LaunchTemplate${i}:
     Type: AWS::EC2::LaunchTemplate
@@ -403,7 +403,7 @@ cat <<PARAM_BLOCK
           Arn: !GetAtt InstanceProfile.Arn
         ImageId: !Ref ECSAMI
         SecurityGroupIds:
-        - !Ref Ec2Sg${i}
+        - !Ref Ec2Sg
         KeyName:
           !If [ KeyPairNameProvided, !Ref KeyPairName, !Ref 'AWS::NoValue' ]
         UserData:

@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Factorio Spot Price Servers () via Docker / ECS
+Description: Factorio Spot Price Servers (10) via Docker / ECS
 Parameters:
 
   ECSAMI:
@@ -508,7 +508,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 10
+  # 1 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg1:
@@ -675,7 +675,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 10
+  # 2 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg2:
@@ -842,7 +842,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 10
+  # 3 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg3:
@@ -1009,7 +1009,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 10
+  # 4 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg4:
@@ -1176,7 +1176,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 10
+  # 5 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg5:
@@ -1343,7 +1343,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 10
+  # 6 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg6:
@@ -1510,7 +1510,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 10
+  # 7 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg7:
@@ -1677,7 +1677,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 10
+  # 8 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg8:
@@ -1844,7 +1844,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 10
+  # 9 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg9:
@@ -2011,7 +2011,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 10
+  # 10 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg10:

@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Factorio Spot Price Servers () via Docker / ECS
+Description: Factorio Spot Price Servers (5) via Docker / ECS
 Parameters:
 
   ECSAMI:
@@ -393,7 +393,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 5
+  # 1 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg1:
@@ -560,7 +560,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 5
+  # 2 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg2:
@@ -727,7 +727,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 5
+  # 3 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg3:
@@ -894,7 +894,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 5
+  # 4 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg4:
@@ -1061,7 +1061,7 @@ Resources:
       VpcId: !Ref Vpc
 
   # ====================================================
-  # INSTANCE CONFIG - 5
+  # 5 - INSTANCE CONFIG
   # ====================================================
 
   Ec2Sg5:
