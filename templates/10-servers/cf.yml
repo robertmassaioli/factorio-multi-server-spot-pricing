@@ -482,8 +482,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate
-            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate1
+            Version: !GetAtt LaunchTemplate1.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -524,7 +524,7 @@ Resources:
   EcsService1:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster
+      Cluster: !Ref EcsCluster1
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState1, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-1"
       TaskDefinition: !Ref EcsTask1
@@ -611,8 +611,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate
-            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate2
+            Version: !GetAtt LaunchTemplate2.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -630,6 +630,7 @@ Resources:
 
   EcsCluster2:
     Type: AWS::ECS::Cluster
+    DependsOn: EcsCluster1
     Properties:
       ClusterName: !Sub "${AWS::StackName}-cluster-2"
 
@@ -653,7 +654,7 @@ Resources:
   EcsService2:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster
+      Cluster: !Ref EcsCluster2
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState2, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-2"
       TaskDefinition: !Ref EcsTask2
@@ -740,8 +741,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate
-            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate3
+            Version: !GetAtt LaunchTemplate3.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -759,6 +760,7 @@ Resources:
 
   EcsCluster3:
     Type: AWS::ECS::Cluster
+    DependsOn: EcsCluster2
     Properties:
       ClusterName: !Sub "${AWS::StackName}-cluster-3"
 
@@ -782,7 +784,7 @@ Resources:
   EcsService3:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster
+      Cluster: !Ref EcsCluster3
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState3, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-3"
       TaskDefinition: !Ref EcsTask3
@@ -869,8 +871,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate
-            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate4
+            Version: !GetAtt LaunchTemplate4.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -888,6 +890,7 @@ Resources:
 
   EcsCluster4:
     Type: AWS::ECS::Cluster
+    DependsOn: EcsCluster3
     Properties:
       ClusterName: !Sub "${AWS::StackName}-cluster-4"
 
@@ -911,7 +914,7 @@ Resources:
   EcsService4:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster
+      Cluster: !Ref EcsCluster4
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState4, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-4"
       TaskDefinition: !Ref EcsTask4
@@ -998,8 +1001,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate
-            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate5
+            Version: !GetAtt LaunchTemplate5.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1017,6 +1020,7 @@ Resources:
 
   EcsCluster5:
     Type: AWS::ECS::Cluster
+    DependsOn: EcsCluster4
     Properties:
       ClusterName: !Sub "${AWS::StackName}-cluster-5"
 
@@ -1040,7 +1044,7 @@ Resources:
   EcsService5:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster
+      Cluster: !Ref EcsCluster5
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState5, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-5"
       TaskDefinition: !Ref EcsTask5
@@ -1127,8 +1131,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate
-            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate6
+            Version: !GetAtt LaunchTemplate6.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1146,6 +1150,7 @@ Resources:
 
   EcsCluster6:
     Type: AWS::ECS::Cluster
+    DependsOn: EcsCluster5
     Properties:
       ClusterName: !Sub "${AWS::StackName}-cluster-6"
 
@@ -1169,7 +1174,7 @@ Resources:
   EcsService6:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster
+      Cluster: !Ref EcsCluster6
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState6, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-6"
       TaskDefinition: !Ref EcsTask6
@@ -1256,8 +1261,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate
-            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate7
+            Version: !GetAtt LaunchTemplate7.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1275,6 +1280,7 @@ Resources:
 
   EcsCluster7:
     Type: AWS::ECS::Cluster
+    DependsOn: EcsCluster6
     Properties:
       ClusterName: !Sub "${AWS::StackName}-cluster-7"
 
@@ -1298,7 +1304,7 @@ Resources:
   EcsService7:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster
+      Cluster: !Ref EcsCluster7
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState7, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-7"
       TaskDefinition: !Ref EcsTask7
@@ -1385,8 +1391,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate
-            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate8
+            Version: !GetAtt LaunchTemplate8.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1404,6 +1410,7 @@ Resources:
 
   EcsCluster8:
     Type: AWS::ECS::Cluster
+    DependsOn: EcsCluster7
     Properties:
       ClusterName: !Sub "${AWS::StackName}-cluster-8"
 
@@ -1427,7 +1434,7 @@ Resources:
   EcsService8:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster
+      Cluster: !Ref EcsCluster8
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState8, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-8"
       TaskDefinition: !Ref EcsTask8
@@ -1514,8 +1521,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate
-            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate9
+            Version: !GetAtt LaunchTemplate9.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1533,6 +1540,7 @@ Resources:
 
   EcsCluster9:
     Type: AWS::ECS::Cluster
+    DependsOn: EcsCluster8
     Properties:
       ClusterName: !Sub "${AWS::StackName}-cluster-9"
 
@@ -1556,7 +1564,7 @@ Resources:
   EcsService9:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster
+      Cluster: !Ref EcsCluster9
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState9, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-9"
       TaskDefinition: !Ref EcsTask9
@@ -1643,8 +1651,8 @@ Resources:
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate
-            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate10
+            Version: !GetAtt LaunchTemplate10.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -1662,6 +1670,7 @@ Resources:
 
   EcsCluster10:
     Type: AWS::ECS::Cluster
+    DependsOn: EcsCluster9
     Properties:
       ClusterName: !Sub "${AWS::StackName}-cluster-10"
 
@@ -1685,7 +1694,7 @@ Resources:
   EcsService10:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster
+      Cluster: !Ref EcsCluster10
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState10, DesiredCapacity ]
       ServiceName: !Sub "${AWS::StackName}-ecs-service-10"
       TaskDefinition: !Ref EcsTask10
@@ -1787,7 +1796,6 @@ Resources:
         Variables:
           HostedZoneId: !Ref HostedZoneId
           SubDomainPrefix: !Ref SubDomainPrefix
-          BaseDomain: !Ref BaseDomain
           S3ConfigBucket: !Ref S3ConfigBucket
       Code:
         ZipFile: |

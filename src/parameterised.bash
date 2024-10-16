@@ -397,8 +397,8 @@ cat <<PARAM_BLOCK
             !If [ UsingSpotInstance, !Ref SpotPrice, !Ref AWS::NoValue ]
         LaunchTemplate:
           LaunchTemplateSpecification:
-            LaunchTemplateId: !Ref LaunchTemplate
-            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+            LaunchTemplateId: !Ref LaunchTemplate${i}
+            Version: !GetAtt LaunchTemplate${i}.LatestVersionNumber
           Overrides:
            - Fn::If:
              - InstanceTypeProvided
@@ -416,6 +416,13 @@ cat <<PARAM_BLOCK
 
   EcsCluster${i}:
     Type: AWS::ECS::Cluster
+PARAM_BLOCK
+
+if [ "$i" -ne 1 ]; then
+    echo "    DependsOn: EcsCluster$((i-1))"
+fi
+
+cat <<PARAM_BLOCK
     Properties:
       ClusterName: !Sub "\${AWS::StackName}-cluster-${i}"
 
@@ -439,7 +446,7 @@ cat <<PARAM_BLOCK
   EcsService${i}:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref EcsCluster
+      Cluster: !Ref EcsCluster${i}
       DesiredCount: !FindInMap [ ServerState, !Ref ServerState${i}, DesiredCapacity ]
       ServiceName: !Sub "\${AWS::StackName}-ecs-service-${i}"
       TaskDefinition: !Ref EcsTask${i}
@@ -545,7 +552,6 @@ cat <<DNS_START
         Variables:
           HostedZoneId: !Ref HostedZoneId
           SubDomainPrefix: !Ref SubDomainPrefix
-          BaseDomain: !Ref BaseDomain
           S3ConfigBucket: !Ref S3ConfigBucket
       Code:
         ZipFile: |
