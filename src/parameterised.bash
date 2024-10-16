@@ -61,7 +61,7 @@ Parameters:
   SubDomainPrefix:
     Type: String
     Description: The default Route Name prefix that will be given to your servers if a HostName is defined. (e.g. factorio-1, factorio-2, etc.)
-    Default: 'factorio-'
+    Default: 'factorio'
 
   EnableRcon:
     Type: String
@@ -611,7 +611,7 @@ cat <<DNS_START
                   config_content = config_file['Body'].read().decode('utf-8')
                   config = json.loads(config_content)
                   logger.info(f"Successfully loaded config from S3: {json.dumps(config)}")
-                  record_name = config.get(asg_name, default_domain)
+                  record_name = config.get(f"server-{asg_number}", default_domain)
                   logger.info(f"Using record name from config: {record_name}")
               except s3.exceptions.NoSuchKey:
                   logger.info("No config file found in S3, using default domain")
