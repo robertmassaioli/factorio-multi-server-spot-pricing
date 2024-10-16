@@ -5438,7 +5438,7 @@ Resources:
       Runtime: python3.12
       Timeout: 20
 
-  LaunchEvent:
+  LaunchEvent1:
     Type: AWS::Events::Rule
     Condition: DnsConfigEnabled
     Properties:
@@ -5469,6 +5469,32 @@ Resources:
           - !Ref AutoScalingGroup18
           - !Ref AutoScalingGroup19
           - !Ref AutoScalingGroup20
+      Name: !Sub "${AWS::StackName}-instance-launch-1"
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt SetDNSRecordLambda.Arn
+          Id: !Sub "${AWS::StackName}-set-dns"
+
+  LaunchEventLambdaPermission1:
+    Type: AWS::Lambda::Permission
+    Condition: DnsConfigEnabled
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt SetDNSRecordLambda.Arn
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt LaunchEvent1.Arn
+
+  LaunchEvent2:
+    Type: AWS::Events::Rule
+    Condition: DnsConfigEnabled
+    Properties:
+      EventPattern:
+        source:
+        - aws.autoscaling
+        detail-type:
+        - EC2 Instance Launch Successful
+        detail:
+          AutoScalingGroupName:
           - !Ref AutoScalingGroup21
           - !Ref AutoScalingGroup22
           - !Ref AutoScalingGroup23
@@ -5489,17 +5515,18 @@ Resources:
           - !Ref AutoScalingGroup38
           - !Ref AutoScalingGroup39
           - !Ref AutoScalingGroup40
-      Name: !Sub "${AWS::StackName}-instance-launch"
+      Name: !Sub "${AWS::StackName}-instance-launch-2"
       State: ENABLED
       Targets:
         - Arn: !GetAtt SetDNSRecordLambda.Arn
           Id: !Sub "${AWS::StackName}-set-dns"
 
-  LaunchEventLambdaPermission:
+  LaunchEventLambdaPermission2:
     Type: AWS::Lambda::Permission
     Condition: DnsConfigEnabled
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !GetAtt SetDNSRecordLambda.Arn
       Principal: events.amazonaws.com
-      SourceArn: !GetAtt LaunchEvent.Arn
+      SourceArn: !GetAtt LaunchEvent2.Arn
+

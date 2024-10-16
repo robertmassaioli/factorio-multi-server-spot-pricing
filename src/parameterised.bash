@@ -670,7 +670,22 @@ cat <<DNS_START
       Runtime: python3.12
       Timeout: 20
 
-  LaunchEvent:
+DNS_START
+
+ASG_COUNT=$SERVERS
+
+# Set the bucket size
+BUCKET_SIZE=20
+
+# Function to generate YAML for a single event rule
+# Function to generate YAML for a single event rule
+generate_event_rule() {
+    local start=$1
+    local end=$2
+    local rule_number=$3
+
+    cat << EOF
+  LaunchEvent${rule_number}:
     Type: AWS::Events::Rule
     Condition: DnsConfigEnabled
     Properties:
@@ -681,29 +696,44 @@ cat <<DNS_START
         - EC2 Instance Launch Successful
         detail:
           AutoScalingGroupName:
-DNS_START
-
-for i in $(seq 1 $SERVERS)
-do
-cat <<MAPPING_ASGS_TO_RECORD_NAMES
-          - !Ref AutoScalingGroup${i}
-MAPPING_ASGS_TO_RECORD_NAMES
-
-done
-
-cat <<DNS_END
-      Name: !Sub "\${AWS::StackName}-instance-launch"
+EOF
+    for asg_num in $(seq $start $end); do
+        echo "          - !Ref AutoScalingGroup${asg_num}"
+    done
+    cat << EOF
+      Name: !Sub "\${AWS::StackName}-instance-launch-${rule_number}"
       State: ENABLED
       Targets:
         - Arn: !GetAtt SetDNSRecordLambda.Arn
           Id: !Sub "\${AWS::StackName}-set-dns"
 
-  LaunchEventLambdaPermission:
+EOF
+}
+
+# Function to generate YAML for a Lambda permission
+generate_lambda_permission() {
+    local rule_number=$1
+
+    cat << EOF
+  LaunchEventLambdaPermission${rule_number}:
     Type: AWS::Lambda::Permission
     Condition: DnsConfigEnabled
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !GetAtt SetDNSRecordLambda.Arn
       Principal: events.amazonaws.com
-      SourceArn: !GetAtt LaunchEvent.Arn
-DNS_END
+      SourceArn: !GetAtt LaunchEvent${rule_number}.Arn
+
+EOF
+}
+
+# Calculate the number of rules needed
+rule_count=$(( ($ASG_COUNT + $BUCKET_SIZE - 1) / $BUCKET_SIZE ))
+
+# Generate YAML for each rule and corresponding permission
+for i in $(seq 1 $rule_count); do
+    start=$(( (i-1)*$BUCKET_SIZE + 1 ))
+    end=$(( i*$BUCKET_SIZE < ASG_COUNT ? i*$BUCKET_SIZE : ASG_COUNT ))
+    generate_event_rule $start $end $i
+    generate_lambda_permission $i
+done
