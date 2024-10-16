@@ -58,6 +58,11 @@ Parameters:
     Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance starts, supply the hosted zone ID here.
     Default: ''
 
+  SubDomainPrefix:
+    Type: String
+    Description: The default Route Name prefix that will be given to your servers if a HostName is defined. (e.g. factorio-1, factorio-2, etc.)
+    Default: 'factorio-'
+
   EnableRcon:
     Type: String
     Description: Refer to https://hub.docker.com/r/factoriotools/factorio/ for further RCON configuration details. This parameter simply opens / closes the port on the security group.
@@ -96,11 +101,6 @@ cat <<VARIABLE_PARAMETERS
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName${i}:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server ${i} starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
 VARIABLE_PARAMETERS
 done
@@ -143,13 +143,6 @@ cat <<METADATA_MID_1
         Parameters:
         - HostedZoneId
 METADATA_MID_1
-
-for i in $(seq 1 $SERVERS)
-do
-cat <<ESSENTIAL_PARAMS
-        - RecordName${i}
-ESSENTIAL_PARAMS
-done
 
 cat <<PARAMETER_LABELS_START
     ParameterLabels:
@@ -523,11 +516,36 @@ cat <<DNS_START
             Version: "2012-10-17"
             Statement:
               - Effect: "Allow"
-                Action: "route53:*"
+                Action:
+                  - "route53:*"
+                  - "route53:ListHostedZones"
                 Resource: "*"
               - Effect: "Allow"
                 Action: "ec2:DescribeInstance*"
                 Resource: "*"
+              - Effect: "Allow"
+                Action:
+                  - "s3:GetObject"
+                  - "s3:ListBucket"
+                Resource:
+                  - !Sub "arn:aws:s3:::\${S3ConfigBucket}"
+                  - !Sub "arn:aws:s3:::\${S3ConfigBucket}/*"
+
+  S3ConfigBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3ConfigBucketName
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
 
   SetDNSRecordLambda:
     Type: "AWS::Lambda::Function"
@@ -536,56 +554,114 @@ cat <<DNS_START
       Environment:
         Variables:
           HostedZoneId: !Ref HostedZoneId
-          ASGRecordMap: !Join [",", [
-DNS_START
-
-for i in $(seq 1 $SERVERS)
-do
-cat <<MAPPING_ASGS_TO_RECORD_NAMES
-            !Sub "\${AutoScalingGroup${i}}:\${RecordName${i}}",
-MAPPING_ASGS_TO_RECORD_NAMES
-
-done
-
-cat <<DNS_MID_1
-          ]]
+          SubDomainPrefix: !Ref SubDomainPrefix
+          BaseDomain: !Ref BaseDomain
+          S3ConfigBucket: !Ref S3ConfigBucket
       Code:
         ZipFile: |
           import boto3
           import os
+          import json
+          import re
+          import logging
+
+          # Set up logging
+          logger = logging.getLogger()
+          logger.setLevel(logging.INFO)
+
+          def get_domain_from_hosted_zone_id(hosted_zone_id):
+              logger.info(f"Retrieving domain name for Hosted Zone ID: {hosted_zone_id}")
+              route53 = boto3.client('route53')
+              try:
+                  response = route53.get_hosted_zone(Id=hosted_zone_id)
+                  domain = response['HostedZone']['Name'].rstrip('.')
+                  logger.info(f"Retrieved domain name: {domain}")
+                  return domain
+              except Exception as e:
+                  logger.error(f"Error retrieving domain name: {str(e)}")
+                  raise
 
           def handler(event, context):
-            asg_name = event['detail']['AutoScalingGroupName']
+              logger.info(f"Lambda function invoked with event: {json.dumps(event)}")
 
-            # Parse the ASG to record name mapping
-            asg_record_map = dict(item.split(':') for item in os.environ['ASGRecordMap'].split(','))
+              asg_name = event['detail']['AutoScalingGroupName']
+              logger.info(f"Processing Auto Scaling Group: {asg_name}")
 
-            # Get the record name for the current ASG
-            record_name = asg_record_map.get(asg_name)
-            if not record_name:
-              raise ValueError(f"No record name mapping found for ASG: {asg_name}")
+              # Extract the number from the ASG name
+              asg_number_match = re.search(r'-(\d+)$', asg_name)
+              if not asg_number_match:
+                  error_msg = f"Invalid ASG name format: {asg_name}"
+                  logger.error(error_msg)
+                  raise ValueError(error_msg)
 
-            new_instance = boto3.resource('ec2').Instance(event['detail']['EC2InstanceId'])
-            boto3.client('route53').change_resource_record_sets(
-              HostedZoneId= os.environ['HostedZoneId'],
-              ChangeBatch={
-                  'Comment': f'Updating DNS for {asg_name}',
-                  'Changes': [
-                      {
-                          'Action': 'UPSERT',
-                          'ResourceRecordSet': {
-                              'Name': record_name,
-                              'Type': 'A',
-                              'TTL': 60,
-                              'ResourceRecords': [
-                                  {
-                                      'Value': new_instance.public_ip_address
-                                  },
-                              ]
-                          }
-                      },
-                  ]
-              })
+              asg_number = asg_number_match.group(1)
+              logger.info(f"Extracted ASG number: {asg_number}")
+
+              # Get the base domain from the Hosted Zone Id
+              hosted_zone_id = os.environ['HostedZoneId']
+              base_domain = get_domain_from_hosted_zone_id(hosted_zone_id)
+
+              # Generate the default domain name
+              sub_domain_prefix = os.environ['SubDomainPrefix']
+              default_domain = f"{sub_domain_prefix}-{asg_number}.{base_domain}"
+              logger.info(f"Generated default domain name: {default_domain}")
+
+              # Check for override config
+              s3 = boto3.client('s3')
+              s3_config_bucket = os.environ['S3ConfigBucket']
+              logger.info(f"Checking for config override in S3 bucket: {s3_config_bucket}")
+              try:
+                  config_file = s3.get_object(Bucket=s3_config_bucket, Key='factorio.config.json')
+                  config_content = config_file['Body'].read().decode('utf-8')
+                  config = json.loads(config_content)
+                  logger.info(f"Successfully loaded config from S3: {json.dumps(config)}")
+                  record_name = config.get(asg_name, default_domain)
+                  logger.info(f"Using record name from config: {record_name}")
+              except s3.exceptions.NoSuchKey:
+                  logger.info("No config file found in S3, using default domain")
+                  record_name = default_domain
+              except Exception as e:
+                  logger.error(f"Error reading config file: {str(e)}")
+                  logger.info("Falling back to default domain")
+                  record_name = default_domain
+
+              # Get the new EC2 instance details
+              ec2_instance_id = event['detail']['EC2InstanceId']
+              logger.info(f"Retrieving details for EC2 instance: {ec2_instance_id}")
+              new_instance = boto3.resource('ec2').Instance(ec2_instance_id)
+              public_ip = new_instance.public_ip_address
+              logger.info(f"Retrieved public IP for instance: {public_ip}")
+
+              # Update Route 53 record
+              logger.info(f"Updating Route 53 record for {record_name} to point to {public_ip}")
+              route53 = boto3.client('route53')
+              try:
+                  response = route53.change_resource_record_sets(
+                      HostedZoneId=hosted_zone_id,
+                      ChangeBatch={
+                          'Comment': f'Updating DNS for {asg_name}',
+                          'Changes': [
+                              {
+                                  'Action': 'UPSERT',
+                                  'ResourceRecordSet': {
+                                      'Name': record_name,
+                                      'Type': 'A',
+                                      'TTL': 60,
+                                      'ResourceRecords': [
+                                          {
+                                              'Value': public_ip
+                                          },
+                                      ]
+                                  }
+                              },
+                          ]
+                      })
+                  logger.info(f"Successfully updated Route 53 record. Change Info: {json.dumps(response['ChangeInfo'])}")
+              except Exception as e:
+                  logger.error(f"Error updating Route 53 record: {str(e)}")
+                  raise
+
+              logger.info("Lambda function execution completed successfully")
       Description: Sets Route 53 DNS Record based on ASG name
       FunctionName: !Sub "\${AWS::StackName}-set-dns"
       Handler: index.handler
@@ -605,7 +681,7 @@ cat <<DNS_MID_1
         - EC2 Instance Launch Successful
         detail:
           AutoScalingGroupName:
-DNS_MID_1
+DNS_START
 
 for i in $(seq 1 $SERVERS)
 do

@@ -55,6 +55,11 @@ Parameters:
     Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance starts, supply the hosted zone ID here.
     Default: ''
 
+  SubDomainPrefix:
+    Type: String
+    Description: The default Route Name prefix that will be given to your servers if a HostName is defined. (e.g. factorio-1, factorio-2, etc.)
+    Default: 'factorio-'
+
   EnableRcon:
     Type: String
     Description: Refer to https://hub.docker.com/r/factoriotools/factorio/ for further RCON configuration details. This parameter simply opens / closes the port on the security group.
@@ -83,11 +88,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName1:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 1 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 2 - Server Specific Variables
   # ====================================================
@@ -99,11 +99,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName2:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 2 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 3 - Server Specific Variables
@@ -117,11 +112,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName3:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 3 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 4 - Server Specific Variables
   # ====================================================
@@ -133,11 +123,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName4:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 4 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 5 - Server Specific Variables
@@ -151,11 +136,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName5:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 5 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 6 - Server Specific Variables
   # ====================================================
@@ -167,11 +147,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName6:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 6 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 7 - Server Specific Variables
@@ -185,11 +160,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName7:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 7 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 8 - Server Specific Variables
   # ====================================================
@@ -201,11 +171,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName8:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 8 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 9 - Server Specific Variables
@@ -219,11 +184,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName9:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 9 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 10 - Server Specific Variables
   # ====================================================
@@ -235,11 +195,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName10:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 10 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 11 - Server Specific Variables
@@ -253,11 +208,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName11:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 11 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 12 - Server Specific Variables
   # ====================================================
@@ -269,11 +219,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName12:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 12 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 13 - Server Specific Variables
@@ -287,11 +232,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName13:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 13 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 14 - Server Specific Variables
   # ====================================================
@@ -303,11 +243,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName14:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 14 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 15 - Server Specific Variables
@@ -321,11 +256,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName15:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 15 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 16 - Server Specific Variables
   # ====================================================
@@ -337,11 +267,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName16:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 16 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 17 - Server Specific Variables
@@ -355,11 +280,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName17:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 17 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 18 - Server Specific Variables
   # ====================================================
@@ -371,11 +291,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName18:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 18 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 19 - Server Specific Variables
@@ -389,11 +304,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName19:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 19 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 20 - Server Specific Variables
   # ====================================================
@@ -405,11 +315,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName20:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 20 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 21 - Server Specific Variables
@@ -423,11 +328,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName21:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 21 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 22 - Server Specific Variables
   # ====================================================
@@ -439,11 +339,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName22:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 22 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 23 - Server Specific Variables
@@ -457,11 +352,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName23:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 23 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 24 - Server Specific Variables
   # ====================================================
@@ -473,11 +363,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName24:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 24 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 25 - Server Specific Variables
@@ -491,11 +376,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName25:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 25 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 26 - Server Specific Variables
   # ====================================================
@@ -507,11 +387,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName26:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 26 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 27 - Server Specific Variables
@@ -525,11 +400,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName27:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 27 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 28 - Server Specific Variables
   # ====================================================
@@ -541,11 +411,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName28:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 28 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 29 - Server Specific Variables
@@ -559,11 +424,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName29:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 29 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 30 - Server Specific Variables
   # ====================================================
@@ -575,11 +435,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName30:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 30 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 31 - Server Specific Variables
@@ -593,11 +448,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName31:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 31 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 32 - Server Specific Variables
   # ====================================================
@@ -609,11 +459,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName32:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 32 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 33 - Server Specific Variables
@@ -627,11 +472,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName33:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 33 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 34 - Server Specific Variables
   # ====================================================
@@ -643,11 +483,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName34:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 34 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 35 - Server Specific Variables
@@ -661,11 +496,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName35:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 35 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 36 - Server Specific Variables
   # ====================================================
@@ -677,11 +507,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName36:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 36 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 37 - Server Specific Variables
@@ -695,11 +520,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName37:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 37 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 38 - Server Specific Variables
   # ====================================================
@@ -711,11 +531,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName38:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 38 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 39 - Server Specific Variables
@@ -729,11 +544,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName39:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 39 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 40 - Server Specific Variables
   # ====================================================
@@ -745,11 +555,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName40:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 40 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 41 - Server Specific Variables
@@ -763,11 +568,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName41:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 41 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 42 - Server Specific Variables
   # ====================================================
@@ -779,11 +579,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName42:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 42 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 43 - Server Specific Variables
@@ -797,11 +592,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName43:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 43 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 44 - Server Specific Variables
   # ====================================================
@@ -813,11 +603,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName44:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 44 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 45 - Server Specific Variables
@@ -831,11 +616,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName45:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 45 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 46 - Server Specific Variables
   # ====================================================
@@ -847,11 +627,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName46:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 46 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 47 - Server Specific Variables
@@ -865,11 +640,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName47:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 47 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 48 - Server Specific Variables
   # ====================================================
@@ -881,11 +651,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName48:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 48 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 49 - Server Specific Variables
@@ -899,11 +664,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName49:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 49 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 50 - Server Specific Variables
   # ====================================================
@@ -915,11 +675,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName50:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 50 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 51 - Server Specific Variables
@@ -933,11 +688,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName51:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 51 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 52 - Server Specific Variables
   # ====================================================
@@ -949,11 +699,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName52:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 52 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 53 - Server Specific Variables
@@ -967,11 +712,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName53:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 53 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 54 - Server Specific Variables
   # ====================================================
@@ -983,11 +723,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName54:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 54 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 55 - Server Specific Variables
@@ -1001,11 +736,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName55:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 55 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 56 - Server Specific Variables
   # ====================================================
@@ -1017,11 +747,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName56:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 56 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 57 - Server Specific Variables
@@ -1035,11 +760,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName57:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 57 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 58 - Server Specific Variables
   # ====================================================
@@ -1051,11 +771,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName58:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 58 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 59 - Server Specific Variables
@@ -1069,11 +784,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName59:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 59 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 60 - Server Specific Variables
   # ====================================================
@@ -1085,11 +795,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName60:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 60 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 61 - Server Specific Variables
@@ -1103,11 +808,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName61:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 61 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 62 - Server Specific Variables
   # ====================================================
@@ -1119,11 +819,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName62:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 62 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 63 - Server Specific Variables
@@ -1137,11 +832,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName63:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 63 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 64 - Server Specific Variables
   # ====================================================
@@ -1153,11 +843,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName64:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 64 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 65 - Server Specific Variables
@@ -1171,11 +856,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName65:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 65 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 66 - Server Specific Variables
   # ====================================================
@@ -1187,11 +867,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName66:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 66 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 67 - Server Specific Variables
@@ -1205,11 +880,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName67:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 67 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 68 - Server Specific Variables
   # ====================================================
@@ -1221,11 +891,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName68:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 68 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 69 - Server Specific Variables
@@ -1239,11 +904,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName69:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 69 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 70 - Server Specific Variables
   # ====================================================
@@ -1255,11 +915,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName70:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 70 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 71 - Server Specific Variables
@@ -1273,11 +928,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName71:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 71 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 72 - Server Specific Variables
   # ====================================================
@@ -1289,11 +939,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName72:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 72 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 73 - Server Specific Variables
@@ -1307,11 +952,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName73:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 73 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 74 - Server Specific Variables
   # ====================================================
@@ -1323,11 +963,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName74:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 74 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 75 - Server Specific Variables
@@ -1341,11 +976,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName75:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 75 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 76 - Server Specific Variables
   # ====================================================
@@ -1357,11 +987,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName76:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 76 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 77 - Server Specific Variables
@@ -1375,11 +1000,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName77:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 77 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 78 - Server Specific Variables
   # ====================================================
@@ -1391,11 +1011,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName78:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 78 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
   # ====================================================
   # 79 - Server Specific Variables
@@ -1409,11 +1024,6 @@ Parameters:
     - Running
     - Stopped
 
-  RecordName79:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 79 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
-
   # ====================================================
   # 80 - Server Specific Variables
   # ====================================================
@@ -1425,11 +1035,6 @@ Parameters:
     AllowedValues:
     - Running
     - Stopped
-
-  RecordName80:
-    Type: String
-    Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance for server 80 starts, supply the name of the record here (e.g. factorio.mydomain.com).
-    Default: ''
 
 Metadata:
   AWS::CloudFormation::Interface:
@@ -1537,86 +1142,6 @@ Metadata:
           default: DNS Configuration (Optional)
         Parameters:
         - HostedZoneId
-        - RecordName1
-        - RecordName2
-        - RecordName3
-        - RecordName4
-        - RecordName5
-        - RecordName6
-        - RecordName7
-        - RecordName8
-        - RecordName9
-        - RecordName10
-        - RecordName11
-        - RecordName12
-        - RecordName13
-        - RecordName14
-        - RecordName15
-        - RecordName16
-        - RecordName17
-        - RecordName18
-        - RecordName19
-        - RecordName20
-        - RecordName21
-        - RecordName22
-        - RecordName23
-        - RecordName24
-        - RecordName25
-        - RecordName26
-        - RecordName27
-        - RecordName28
-        - RecordName29
-        - RecordName30
-        - RecordName31
-        - RecordName32
-        - RecordName33
-        - RecordName34
-        - RecordName35
-        - RecordName36
-        - RecordName37
-        - RecordName38
-        - RecordName39
-        - RecordName40
-        - RecordName41
-        - RecordName42
-        - RecordName43
-        - RecordName44
-        - RecordName45
-        - RecordName46
-        - RecordName47
-        - RecordName48
-        - RecordName49
-        - RecordName50
-        - RecordName51
-        - RecordName52
-        - RecordName53
-        - RecordName54
-        - RecordName55
-        - RecordName56
-        - RecordName57
-        - RecordName58
-        - RecordName59
-        - RecordName60
-        - RecordName61
-        - RecordName62
-        - RecordName63
-        - RecordName64
-        - RecordName65
-        - RecordName66
-        - RecordName67
-        - RecordName68
-        - RecordName69
-        - RecordName70
-        - RecordName71
-        - RecordName72
-        - RecordName73
-        - RecordName74
-        - RecordName75
-        - RecordName76
-        - RecordName77
-        - RecordName78
-        - RecordName79
-        - RecordName80
     ParameterLabels:
       FactorioImageTag:
         default: "Which version of Factorio do you want to launch?"
@@ -10719,11 +10244,36 @@ Resources:
             Version: "2012-10-17"
             Statement:
               - Effect: "Allow"
-                Action: "route53:*"
+                Action:
+                  - "route53:*"
+                  - "route53:ListHostedZones"
                 Resource: "*"
               - Effect: "Allow"
                 Action: "ec2:DescribeInstance*"
                 Resource: "*"
+              - Effect: "Allow"
+                Action:
+                  - "s3:GetObject"
+                  - "s3:ListBucket"
+                Resource:
+                  - !Sub "arn:aws:s3:::${S3ConfigBucket}"
+                  - !Sub "arn:aws:s3:::${S3ConfigBucket}/*"
+
+  S3ConfigBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3ConfigBucketName
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
 
   SetDNSRecordLambda:
     Type: "AWS::Lambda::Function"
@@ -10732,125 +10282,114 @@ Resources:
       Environment:
         Variables:
           HostedZoneId: !Ref HostedZoneId
-          ASGRecordMap: !Join [",", [
-            !Sub "${AutoScalingGroup1}:${RecordName1}",
-            !Sub "${AutoScalingGroup2}:${RecordName2}",
-            !Sub "${AutoScalingGroup3}:${RecordName3}",
-            !Sub "${AutoScalingGroup4}:${RecordName4}",
-            !Sub "${AutoScalingGroup5}:${RecordName5}",
-            !Sub "${AutoScalingGroup6}:${RecordName6}",
-            !Sub "${AutoScalingGroup7}:${RecordName7}",
-            !Sub "${AutoScalingGroup8}:${RecordName8}",
-            !Sub "${AutoScalingGroup9}:${RecordName9}",
-            !Sub "${AutoScalingGroup10}:${RecordName10}",
-            !Sub "${AutoScalingGroup11}:${RecordName11}",
-            !Sub "${AutoScalingGroup12}:${RecordName12}",
-            !Sub "${AutoScalingGroup13}:${RecordName13}",
-            !Sub "${AutoScalingGroup14}:${RecordName14}",
-            !Sub "${AutoScalingGroup15}:${RecordName15}",
-            !Sub "${AutoScalingGroup16}:${RecordName16}",
-            !Sub "${AutoScalingGroup17}:${RecordName17}",
-            !Sub "${AutoScalingGroup18}:${RecordName18}",
-            !Sub "${AutoScalingGroup19}:${RecordName19}",
-            !Sub "${AutoScalingGroup20}:${RecordName20}",
-            !Sub "${AutoScalingGroup21}:${RecordName21}",
-            !Sub "${AutoScalingGroup22}:${RecordName22}",
-            !Sub "${AutoScalingGroup23}:${RecordName23}",
-            !Sub "${AutoScalingGroup24}:${RecordName24}",
-            !Sub "${AutoScalingGroup25}:${RecordName25}",
-            !Sub "${AutoScalingGroup26}:${RecordName26}",
-            !Sub "${AutoScalingGroup27}:${RecordName27}",
-            !Sub "${AutoScalingGroup28}:${RecordName28}",
-            !Sub "${AutoScalingGroup29}:${RecordName29}",
-            !Sub "${AutoScalingGroup30}:${RecordName30}",
-            !Sub "${AutoScalingGroup31}:${RecordName31}",
-            !Sub "${AutoScalingGroup32}:${RecordName32}",
-            !Sub "${AutoScalingGroup33}:${RecordName33}",
-            !Sub "${AutoScalingGroup34}:${RecordName34}",
-            !Sub "${AutoScalingGroup35}:${RecordName35}",
-            !Sub "${AutoScalingGroup36}:${RecordName36}",
-            !Sub "${AutoScalingGroup37}:${RecordName37}",
-            !Sub "${AutoScalingGroup38}:${RecordName38}",
-            !Sub "${AutoScalingGroup39}:${RecordName39}",
-            !Sub "${AutoScalingGroup40}:${RecordName40}",
-            !Sub "${AutoScalingGroup41}:${RecordName41}",
-            !Sub "${AutoScalingGroup42}:${RecordName42}",
-            !Sub "${AutoScalingGroup43}:${RecordName43}",
-            !Sub "${AutoScalingGroup44}:${RecordName44}",
-            !Sub "${AutoScalingGroup45}:${RecordName45}",
-            !Sub "${AutoScalingGroup46}:${RecordName46}",
-            !Sub "${AutoScalingGroup47}:${RecordName47}",
-            !Sub "${AutoScalingGroup48}:${RecordName48}",
-            !Sub "${AutoScalingGroup49}:${RecordName49}",
-            !Sub "${AutoScalingGroup50}:${RecordName50}",
-            !Sub "${AutoScalingGroup51}:${RecordName51}",
-            !Sub "${AutoScalingGroup52}:${RecordName52}",
-            !Sub "${AutoScalingGroup53}:${RecordName53}",
-            !Sub "${AutoScalingGroup54}:${RecordName54}",
-            !Sub "${AutoScalingGroup55}:${RecordName55}",
-            !Sub "${AutoScalingGroup56}:${RecordName56}",
-            !Sub "${AutoScalingGroup57}:${RecordName57}",
-            !Sub "${AutoScalingGroup58}:${RecordName58}",
-            !Sub "${AutoScalingGroup59}:${RecordName59}",
-            !Sub "${AutoScalingGroup60}:${RecordName60}",
-            !Sub "${AutoScalingGroup61}:${RecordName61}",
-            !Sub "${AutoScalingGroup62}:${RecordName62}",
-            !Sub "${AutoScalingGroup63}:${RecordName63}",
-            !Sub "${AutoScalingGroup64}:${RecordName64}",
-            !Sub "${AutoScalingGroup65}:${RecordName65}",
-            !Sub "${AutoScalingGroup66}:${RecordName66}",
-            !Sub "${AutoScalingGroup67}:${RecordName67}",
-            !Sub "${AutoScalingGroup68}:${RecordName68}",
-            !Sub "${AutoScalingGroup69}:${RecordName69}",
-            !Sub "${AutoScalingGroup70}:${RecordName70}",
-            !Sub "${AutoScalingGroup71}:${RecordName71}",
-            !Sub "${AutoScalingGroup72}:${RecordName72}",
-            !Sub "${AutoScalingGroup73}:${RecordName73}",
-            !Sub "${AutoScalingGroup74}:${RecordName74}",
-            !Sub "${AutoScalingGroup75}:${RecordName75}",
-            !Sub "${AutoScalingGroup76}:${RecordName76}",
-            !Sub "${AutoScalingGroup77}:${RecordName77}",
-            !Sub "${AutoScalingGroup78}:${RecordName78}",
-            !Sub "${AutoScalingGroup79}:${RecordName79}",
-            !Sub "${AutoScalingGroup80}:${RecordName80}",
-          ]]
+          SubDomainPrefix: !Ref SubDomainPrefix
+          BaseDomain: !Ref BaseDomain
+          S3ConfigBucket: !Ref S3ConfigBucket
       Code:
         ZipFile: |
           import boto3
           import os
+          import json
+          import re
+          import logging
+
+          # Set up logging
+          logger = logging.getLogger()
+          logger.setLevel(logging.INFO)
+
+          def get_domain_from_hosted_zone_id(hosted_zone_id):
+              logger.info(f"Retrieving domain name for Hosted Zone ID: {hosted_zone_id}")
+              route53 = boto3.client('route53')
+              try:
+                  response = route53.get_hosted_zone(Id=hosted_zone_id)
+                  domain = response['HostedZone']['Name'].rstrip('.')
+                  logger.info(f"Retrieved domain name: {domain}")
+                  return domain
+              except Exception as e:
+                  logger.error(f"Error retrieving domain name: {str(e)}")
+                  raise
 
           def handler(event, context):
-            asg_name = event['detail']['AutoScalingGroupName']
+              logger.info(f"Lambda function invoked with event: {json.dumps(event)}")
 
-            # Parse the ASG to record name mapping
-            asg_record_map = dict(item.split(':') for item in os.environ['ASGRecordMap'].split(','))
+              asg_name = event['detail']['AutoScalingGroupName']
+              logger.info(f"Processing Auto Scaling Group: {asg_name}")
 
-            # Get the record name for the current ASG
-            record_name = asg_record_map.get(asg_name)
-            if not record_name:
-              raise ValueError(f"No record name mapping found for ASG: {asg_name}")
+              # Extract the number from the ASG name
+              asg_number_match = re.search(r'-(\d+)$', asg_name)
+              if not asg_number_match:
+                  error_msg = f"Invalid ASG name format: {asg_name}"
+                  logger.error(error_msg)
+                  raise ValueError(error_msg)
 
-            new_instance = boto3.resource('ec2').Instance(event['detail']['EC2InstanceId'])
-            boto3.client('route53').change_resource_record_sets(
-              HostedZoneId= os.environ['HostedZoneId'],
-              ChangeBatch={
-                  'Comment': f'Updating DNS for {asg_name}',
-                  'Changes': [
-                      {
-                          'Action': 'UPSERT',
-                          'ResourceRecordSet': {
-                              'Name': record_name,
-                              'Type': 'A',
-                              'TTL': 60,
-                              'ResourceRecords': [
-                                  {
-                                      'Value': new_instance.public_ip_address
-                                  },
-                              ]
-                          }
-                      },
-                  ]
-              })
+              asg_number = asg_number_match.group(1)
+              logger.info(f"Extracted ASG number: {asg_number}")
+
+              # Get the base domain from the Hosted Zone Id
+              hosted_zone_id = os.environ['HostedZoneId']
+              base_domain = get_domain_from_hosted_zone_id(hosted_zone_id)
+
+              # Generate the default domain name
+              sub_domain_prefix = os.environ['SubDomainPrefix']
+              default_domain = f"{sub_domain_prefix}-{asg_number}.{base_domain}"
+              logger.info(f"Generated default domain name: {default_domain}")
+
+              # Check for override config
+              s3 = boto3.client('s3')
+              s3_config_bucket = os.environ['S3ConfigBucket']
+              logger.info(f"Checking for config override in S3 bucket: {s3_config_bucket}")
+              try:
+                  config_file = s3.get_object(Bucket=s3_config_bucket, Key='factorio.config.json')
+                  config_content = config_file['Body'].read().decode('utf-8')
+                  config = json.loads(config_content)
+                  logger.info(f"Successfully loaded config from S3: {json.dumps(config)}")
+                  record_name = config.get(asg_name, default_domain)
+                  logger.info(f"Using record name from config: {record_name}")
+              except s3.exceptions.NoSuchKey:
+                  logger.info("No config file found in S3, using default domain")
+                  record_name = default_domain
+              except Exception as e:
+                  logger.error(f"Error reading config file: {str(e)}")
+                  logger.info("Falling back to default domain")
+                  record_name = default_domain
+
+              # Get the new EC2 instance details
+              ec2_instance_id = event['detail']['EC2InstanceId']
+              logger.info(f"Retrieving details for EC2 instance: {ec2_instance_id}")
+              new_instance = boto3.resource('ec2').Instance(ec2_instance_id)
+              public_ip = new_instance.public_ip_address
+              logger.info(f"Retrieved public IP for instance: {public_ip}")
+
+              # Update Route 53 record
+              logger.info(f"Updating Route 53 record for {record_name} to point to {public_ip}")
+              route53 = boto3.client('route53')
+              try:
+                  response = route53.change_resource_record_sets(
+                      HostedZoneId=hosted_zone_id,
+                      ChangeBatch={
+                          'Comment': f'Updating DNS for {asg_name}',
+                          'Changes': [
+                              {
+                                  'Action': 'UPSERT',
+                                  'ResourceRecordSet': {
+                                      'Name': record_name,
+                                      'Type': 'A',
+                                      'TTL': 60,
+                                      'ResourceRecords': [
+                                          {
+                                              'Value': public_ip
+                                          },
+                                      ]
+                                  }
+                              },
+                          ]
+                      })
+                  logger.info(f"Successfully updated Route 53 record. Change Info: {json.dumps(response['ChangeInfo'])}")
+              except Exception as e:
+                  logger.error(f"Error updating Route 53 record: {str(e)}")
+                  raise
+
+              logger.info("Lambda function execution completed successfully")
       Description: Sets Route 53 DNS Record based on ASG name
       FunctionName: !Sub "${AWS::StackName}-set-dns"
       Handler: index.handler
