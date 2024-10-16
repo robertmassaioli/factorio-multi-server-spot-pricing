@@ -24,9 +24,9 @@ A few notes on the services we're using...
 
 ## Getting Started with Multi Server Factorio
 
-Because you might like to start different games, or have one for friends and one for your personal use, we recommend that you spin up a single multi-server instance. After all, you only pay for what you use so setting up a 20-server stack and then only using one server will (currently) cost the same as a 1-server stack. For this example, we will setup the 20-server stack:
+Because you might like to start different games, or have one for friends and one for your personal use, we recommend that you spin up a single multi-server instance. After all, you only pay for what you use so setting up a 25-server stack and then only using one server will (currently) cost the same as a 1-server stack. For this example, we will setup the 25-server stack:
 
-[![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/20-servers/cf.yml)
+[![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/25-servers/cf.yml)
 
 1. Click the above link, you'll need to log into your AWS account if you haven't already.
 1. Ensure you've selected a suitable AWS Region (closest to you) via the selector at the top right.
@@ -39,8 +39,8 @@ The other stacks are:
 * 1 Server: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/1-server/cf.yml)
 * 5 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/5-servers/cf.yml)
 * 10 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/10-servers/cf.yml)
-* 20 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/20-servers/cf.yml)
-* 40 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/40-servers/cf.yml)
+* 25 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/25-servers/cf.yml)
+* 50 Servers: [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=factorio&templateURL=https://factorio-multi-server-spot-pricing.s3.ap-southeast-2.amazonaws.com/50-servers/cf.yml)
 
 Note: Why not 100 servers?
 
@@ -60,14 +60,14 @@ At this point you should *really* configure remote access as per the below secti
 
 ### Remote Access
 
-You will likely want to SSH onto the Linux instance to make server changes / add a game password. You might also want to do this to upload your existing save. For security, SSH should be locked down to a known IP address (i.e. you), preventing malicious users from trying to break in. You'll need to create a Key Pair in AWS, find your public IP address, and then provide both of the parameters in the Remote Access (SSH) Configuration (Optional) section.
+You will likely want to SSH onto the Linux instance to make server changes / add a game password. You might also want to do this to upload your existing save. For security, SSH should be locked down to a known IP address (i.e. you), preventing malicious users from trying to break in. You'll need to create a Key Pair in AWS, find your public IP address (or let the relevant script in the templates directory do it for you), and then provide both of the parameters in the Remote Access (SSH) Configuration (Optional) section.
 
-Note that this assumes some familiarity with SSH. The Linux instance will have a user `ec2-user` which you may connect to via SSH. If you want to upload saves, it's easiest to upload them to `/home/ec2-user` via SCP as the `ec2-user` user (this is `ec2-user`'s home directory), and then `sudo mv` these files to the right location in the factorio installation via SSH.
+Note that this assumes some familiarity with SSH. The Linux instance will have a user `ec2-user` which you may connect to via SSH. If you want to upload saves, it's easiest to use the `util/upload-save.bash` script.
 
 For remote access, you'll need to:
 
 1. Create a [Key Pair](https://console.aws.amazon.com/ec2/v2/home#KeyPairs:sort=keyName) (Services > EC2 > Key Pairs). You'll need to use this to connect to the instance for additional setup.
-2. [Find your public IP address]((https://whatismyipaddress.com/)). You'll need this to connect to the instance for additional setup.
+2. [Find your public IP address]((https://whatismyipaddress.com/)). You'll need this to connect to the instance for additional setup. (The update-factorio-servers.bash script for your template will do this for you)
 
 If you're creating a new Factorio deployment, provide these parameters when creating the stack. Otherwise, update your existing stack and provide these parameters.
 

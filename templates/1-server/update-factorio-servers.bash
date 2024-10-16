@@ -41,14 +41,14 @@ generate_and_upload_config() {
     local config_content="{\n  \"routes\": {"
     local first_entry=true
 
-    for i in seq 1 
+    for asg_num in $(seq 1 )
     do
-        local route_name="ROUTE_NAME_$i"
-        if [ -n "${!route_name}" ]; then
+        local route_name="RECORD_NAME_${asg_num}"
+        if [ "x${!route_name}" != "x" ]; then
             if [ "$first_entry" = false ]; then
                 config_content="$config_content,"
             fi
-            config_content="$config_content\n    \"server-$i\": \"${!route_name}\""
+            config_content="$config_content\n    \"server-${asg_num}\": \"${!route_name}\""
             first_entry=false
         fi
     done
