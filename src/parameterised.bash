@@ -530,6 +530,7 @@ cat <<DNS_START
 
   S3ConfigBucket:
     Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
     Properties:
       BucketName: !Sub "\${AWS::StackName}-config"
       VersioningConfiguration:
