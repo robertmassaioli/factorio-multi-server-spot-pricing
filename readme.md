@@ -131,7 +131,15 @@ CONTAINER ID   IMAGE                            COMMAND                  CREATED
 
 ### Custom Domain Name
 
-Every time your Factorio server starts it'll have a new public IP address. This can be a pain to keep dishing out to your friends. If you're prepared to register a domain name (maybe you've already got one) and create a Route 53 hosted zone, this problem is easily fixed. You'll need to provide both of the parameters under the DNS Configuration (Optional) section. Whenever your instance is launched, a Lambda function fires off and creates / updates the record of your choosing. This way, you can have a custom domain name such as "factorio.mydomain.com". Note that it may take a few minutes for the new IP to propagate to your friends computers. Have patience. Failing that just go to the EC2 console, and give them the new public IP address of your instance.
+Every time your Factorio server starts it'll have a new public IP address. This can be a pain to keep dishing out to your friends. If you're prepared to register a domain name (maybe you've already got one) and create a Route 53 hosted zone, this problem is easily fixed. 
+
+You'll need to provide both of the parameters under the DNS Configuration (Optional) section. The HostedZoneId is the identifier for your domain name in AWS Route 53. 
+
+By default, without providing any overrides, each server will be called `<SubDomainPrefix>-<server number>.<HostedZoneDomain>`. For example, if your domain is `mydomain.com`, and `SubDomainPrefix` is left at the default `factorio` then server 14 would be called `factorio-14.mydomain.com` and will be automatically for you.
+
+You can easily update this default by using the `update-factorio-servers.bash` script and putting in a custom domain for any of the servers and it will automatically upload the override for you to S3.
+
+Whenever your instance is launched, a Lambda function fires off and creates / updates the record of your choosing. This way, you can have a custom domain name such as `factorio.mydomain.com`. Note that it may take a few minutes for the new IP to propagate to your friends computers. Have patience. Failing that just go to the EC2 console, and give them the new public IP address of your instance.
 
 ## FAQ
 
@@ -161,42 +169,15 @@ Update your CloudFormation stack. Change the server state parameter from "Runnin
 
 **How do I turn my stack on and off from the terminal?**
 
-You can write a bash script, using the CLI like so:
+Copy the `update-factorio-servers.bash` from the `templates` directory for the template you used. This repository is designed to be used to drive your servers. Edit the file to have your defaults set (like the HostedZoneId etc.). And then use it like so:
 
 ``` bash
-#!/bin/bash
-
-update_stack() {
-    local state=$1
-    aws cloudformation update-stack \
-        --stack-name factorio-2024 \
-        --use-previous-template \
-        --parameters ParameterKey=ServerState,ParameterValue=$state \
-        --capabilities CAPABILITY_IAM \
-        --profile AdministratorAccess-111111111111
-}
-
-case "$1" in
-    start)
-        update_stack "Running"
-        ;;
-    stop)
-        update_stack "Stopped"
-        ;;
-    *)
-        echo "Usage: $0 {start|stop}"
-        exit 1
-        ;;
-esac
+SERVER_STATE_5=Running bash update-factorio-servers.bash
 ```
 
-If you put that in a file called `update_factorio.bash` then you could run:
+That will start server 5 and stop all of the others.
 
-``` bash
-$ bash update_factorio.bash <start|stop>
-```
-
-That does require that you run `aws configure sso` first and set up an IAM account with all the right perms.
+That does require that you run `aws configure` first and set up an IAM account with all the right perms. It is recommended to use CLI Credentials that are evergreen for convenience.
 
 **I'm done with Factorio, how do I delete this server?** 
 
