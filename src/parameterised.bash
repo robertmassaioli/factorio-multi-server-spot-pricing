@@ -657,7 +657,7 @@ cat <<DNS_START
                               },
                           ]
                       })
-                  logger.info(f"Successfully updated Route 53 record. Change Info: {json.dumps(response['ChangeInfo'])}")
+                  logger.info(f"Successfully updated Route 53 record.")
               except Exception as e:
                   logger.error(f"Error updating Route 53 record: {str(e)}")
                   raise
