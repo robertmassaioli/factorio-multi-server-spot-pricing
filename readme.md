@@ -2,6 +2,8 @@
 
 The templates contained within this repository can be used to deploy one or more Factorio servers to Amazon Web Services (AWS) in minutes. As the solution leverages "Spot Pricing", each server should cost less than USD$0.03 an hour to run, and you can even turn each server off individually when you and your friends aren't playing - saving even more money.
 
+This is the multi-server version of https://github.com/m-chandler/factorio-spot-pricing which offers a single factorio server version. This script attempt to maintain as close to the original as possible while only deviating where necessary in order to get the maximum number of servers in a single Cloud Formation template.
+
 ## Prerequisites
 
 1. A basic understanding of Amazon Web Services.
