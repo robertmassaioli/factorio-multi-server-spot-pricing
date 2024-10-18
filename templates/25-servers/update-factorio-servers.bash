@@ -132,7 +132,7 @@ generate_and_upload_config() {
 # The update command
 
 update_stack() {
-    aws cloudformation update-stack \
+    AWS_PAGER=cat aws cloudformation update-stack \
         --stack-name "$STACK_NAME" \
         --use-previous-template \
         --parameters \
