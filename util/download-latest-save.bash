@@ -11,8 +11,43 @@ remote_name="$1"
 # Generate a human-readable timestamp
 timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
 
+function sshu() {
+    local ignore_known_hosts=0
+    local accept_new=0
+    local args=()
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --ignore-known-hosts)
+                ignore_known_hosts=1
+                shift
+                ;;
+            --accept-new)
+                accept_new=1
+                shift
+                ;;
+            *)
+                args+=("$1")
+                shift
+                ;;
+        esac
+    done
+
+    # Set SSH options based on flags
+    local ssh_opts=()
+    if [[ $ignore_known_hosts -eq 1 ]]; then
+        ssh_opts+=(-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no)
+    elif [[ $accept_new -eq 1 ]]; then
+        ssh_opts+=(-o StrictHostKeyChecking=accept-new)
+    fi
+
+    # Execute SSH command
+    command ssh "${ssh_opts[@]}" "${args[@]}"
+}
+
 # SSH into the remote instance to find the most recent save file
-ssh_output=$(ssh "ec2-user@$remote_name" << EOF
+ssh_output=$(sshu --ignore-known-hosts "ec2-user@$remote_name" << EOF
     # Record the current directory
     current_dir=\$(pwd)
 
