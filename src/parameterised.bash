@@ -54,7 +54,7 @@ Parameters:
     Default: ''
 
   HostedZoneId:
-    Type: String
+    Type: AWS::Route53::HostedZone::Id
     Description: (Optional - An empty value disables this feature) If you have a hosted zone in Route 53 and wish to set a DNS record whenever your Factorio instance starts, supply the hosted zone ID here.
     Default: ''
 
