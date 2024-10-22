@@ -71,6 +71,14 @@ Parameters:
     - true
     - false
 
+  DlcSpaceAge:
+    Type: String
+    Description: Refer to https://hub.docker.com/r/factoriotools/factorio/ for further information about Space Age. Enables or disable Space Age mods. Everybody that wants to use these servers will have to have mods enabled or disabled respectively for the Space Age expansion pack. Irrelevant if docker image for factorio is set to be prior to v2.
+    Default: false
+    AllowedValues:
+    - true
+    - false
+
   UpdateModsOnStart:
     Type: String
     Description: Refer to https://hub.docker.com/r/factoriotools/factorio/ for further configuration details.
@@ -113,6 +121,7 @@ Metadata:
           default: Essential Configuration
         Parameters:
         - FactorioImageTag
+        - DlcSpaceAge
         - EnableRcon
         - UpdateModsOnStart
 METADATA_START
@@ -149,6 +158,8 @@ cat <<PARAMETER_LABELS_START
     ParameterLabels:
       FactorioImageTag:
         default: "Which version of Factorio do you want to launch?"
+      DlcSpaceAge:
+        default: "Do you want everybody that connects to be using the Spage Age Expansion or not?"
       InstanceType:
         default: "Which instance type? You must make sure this is available in your region! https://aws.amazon.com/ec2/pricing/on-demand/"
       KeyPairName:
@@ -483,6 +494,8 @@ cat <<PARAM_BLOCK
           Environment:
           - Name: UPDATE_MODS_ON_START
             Value: !Sub "\${UpdateModsOnStart}"
+          - Name: DLC_SPACE_AGE
+            Value: !Sub "\${DlcSpaceAge}"
 
 PARAM_BLOCK
 done

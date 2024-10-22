@@ -68,6 +68,14 @@ Parameters:
     - true
     - false
 
+  DlcSpaceAge:
+    Type: String
+    Description: Refer to https://hub.docker.com/r/factoriotools/factorio/ for further information about Space Age. Enables or disable Space Age mods. Everybody that wants to use these servers will have to have mods enabled or disabled respectively for the Space Age expansion pack. Irrelevant if docker image for factorio is set to be prior to v2.
+    Default: false
+    AllowedValues:
+    - true
+    - false
+
   UpdateModsOnStart:
     Type: String
     Description: Refer to https://hub.docker.com/r/factoriotools/factorio/ for further configuration details.
@@ -203,6 +211,7 @@ Metadata:
           default: Essential Configuration
         Parameters:
         - FactorioImageTag
+        - DlcSpaceAge
         - EnableRcon
         - UpdateModsOnStart
         - ServerState1
@@ -236,6 +245,8 @@ Metadata:
     ParameterLabels:
       FactorioImageTag:
         default: "Which version of Factorio do you want to launch?"
+      DlcSpaceAge:
+        default: "Do you want everybody that connects to be using the Spage Age Expansion or not?"
       InstanceType:
         default: "Which instance type? You must make sure this is available in your region! https://aws.amazon.com/ec2/pricing/on-demand/"
       KeyPairName:
@@ -561,6 +572,8 @@ Resources:
           Environment:
           - Name: UPDATE_MODS_ON_START
             Value: !Sub "${UpdateModsOnStart}"
+          - Name: DLC_SPACE_AGE
+            Value: !Sub "${DlcSpaceAge}"
 
   # ====================================================
   # 2 - EFS FOR PERSISTENT DATA
@@ -691,6 +704,8 @@ Resources:
           Environment:
           - Name: UPDATE_MODS_ON_START
             Value: !Sub "${UpdateModsOnStart}"
+          - Name: DLC_SPACE_AGE
+            Value: !Sub "${DlcSpaceAge}"
 
   # ====================================================
   # 3 - EFS FOR PERSISTENT DATA
@@ -821,6 +836,8 @@ Resources:
           Environment:
           - Name: UPDATE_MODS_ON_START
             Value: !Sub "${UpdateModsOnStart}"
+          - Name: DLC_SPACE_AGE
+            Value: !Sub "${DlcSpaceAge}"
 
   # ====================================================
   # 4 - EFS FOR PERSISTENT DATA
@@ -951,6 +968,8 @@ Resources:
           Environment:
           - Name: UPDATE_MODS_ON_START
             Value: !Sub "${UpdateModsOnStart}"
+          - Name: DLC_SPACE_AGE
+            Value: !Sub "${DlcSpaceAge}"
 
   # ====================================================
   # 5 - EFS FOR PERSISTENT DATA
@@ -1081,6 +1100,8 @@ Resources:
           Environment:
           - Name: UPDATE_MODS_ON_START
             Value: !Sub "${UpdateModsOnStart}"
+          - Name: DLC_SPACE_AGE
+            Value: !Sub "${DlcSpaceAge}"
 
   # ====================================================
   # 6 - EFS FOR PERSISTENT DATA
@@ -1211,6 +1232,8 @@ Resources:
           Environment:
           - Name: UPDATE_MODS_ON_START
             Value: !Sub "${UpdateModsOnStart}"
+          - Name: DLC_SPACE_AGE
+            Value: !Sub "${DlcSpaceAge}"
 
   # ====================================================
   # 7 - EFS FOR PERSISTENT DATA
@@ -1341,6 +1364,8 @@ Resources:
           Environment:
           - Name: UPDATE_MODS_ON_START
             Value: !Sub "${UpdateModsOnStart}"
+          - Name: DLC_SPACE_AGE
+            Value: !Sub "${DlcSpaceAge}"
 
   # ====================================================
   # 8 - EFS FOR PERSISTENT DATA
@@ -1471,6 +1496,8 @@ Resources:
           Environment:
           - Name: UPDATE_MODS_ON_START
             Value: !Sub "${UpdateModsOnStart}"
+          - Name: DLC_SPACE_AGE
+            Value: !Sub "${DlcSpaceAge}"
 
   # ====================================================
   # 9 - EFS FOR PERSISTENT DATA
@@ -1601,6 +1628,8 @@ Resources:
           Environment:
           - Name: UPDATE_MODS_ON_START
             Value: !Sub "${UpdateModsOnStart}"
+          - Name: DLC_SPACE_AGE
+            Value: !Sub "${DlcSpaceAge}"
 
   # ====================================================
   # 10 - EFS FOR PERSISTENT DATA
@@ -1731,6 +1760,8 @@ Resources:
           Environment:
           - Name: UPDATE_MODS_ON_START
             Value: !Sub "${UpdateModsOnStart}"
+          - Name: DLC_SPACE_AGE
+            Value: !Sub "${DlcSpaceAge}"
 
   # ====================================================
   # SET DNS RECORD - For all ASGs and EC2 instances
