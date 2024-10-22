@@ -22,16 +22,6 @@ scp "$save_file" "ec2-user@$ec2_address:~/"
 
 # SSH into the EC2 instance and perform the required operations
 ssh "ec2-user@$ec2_address" << EOF
-    # Get the Factorio container ID
-    container_id=\$(docker ps | grep factoriotools/factorio | awk '{print \$1}' | cut -c1-3)
-
-    if [ -z "\$container_id" ]; then
-        echo "Factorio container not found"
-        exit 1
-    fi
-
-    echo "Factorio container ID: \$container_id"
-
     # Find the save directory
     savedir=\$(mount | grep nfs4 | cut -f3 -d ' ' | xargs -I {} echo "{}/saves")
     echo "Save directory: \$savedir"
@@ -41,6 +31,17 @@ ssh "ec2-user@$ec2_address" << EOF
 
     # Touch the save file to update its timestamp
     sudo touch \$savedir/$(basename "$save_file")
+    echo "Save dir uploaded successfully"
+
+    # Get the Factorio container ID
+    container_id=\$(docker ps | grep factoriotools/factorio | awk '{print \$1}' | cut -c1-3)
+
+    if [ -z "\$container_id" ]; then
+        echo "Factorio container not found"
+        exit 1
+    fi
+
+    echo "Factorio container ID: \$container_id"
 
     # Force kill the Factorio docker container
     echo "Killing Factorio container..."
