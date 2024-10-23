@@ -22,6 +22,7 @@ PUBLIC_IP=$(get_public_ip)
 # Default parameter values
 ECSAMI=${ECSAMI:-/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id}
 FACTORIO_IMAGE_TAG=${FACTORIO_IMAGE_TAG:-latest}
+SPACE_AGE=${SPACE_AGE:-false}
 INSTANCE_TYPE=${INSTANCE_TYPE:-m6a.large}
 SPOT_PRICE=${SPOT_PRICE:-0.05}
 KEY_PAIR_NAME=${KEY_PAIR_NAME:-""}
@@ -188,6 +189,7 @@ update_stack() {
         --parameters \
         ParameterKey=ECSAMI,ParameterValue="$ECSAMI" \
         ParameterKey=FactorioImageTag,ParameterValue="$FACTORIO_IMAGE_TAG" \
+        ParameterKey=DlcSpaceAge,ParameterValue="$SPACE_AGE" \
         ParameterKey=InstanceType,ParameterValue="$INSTANCE_TYPE" \
         ParameterKey=SpotPrice,ParameterValue="$SPOT_PRICE" \
         ParameterKey=KeyPairName,ParameterValue="$KEY_PAIR_NAME" \
