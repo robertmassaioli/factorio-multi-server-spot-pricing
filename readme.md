@@ -4,6 +4,8 @@ The templates contained within this repository can be used to deploy one or more
 
 This is the multi-server version of https://github.com/m-chandler/factorio-spot-pricing which offers a single factorio server version. This script attempt to maintain as close to the original as possible while only deviating where necessary in order to get the maximum number of servers in a single Cloud Formation template.
 
+If you wish to deploy multiple factorio servers with the one CloudFormation template (perhaps because of a team event or you just have different saves that you want to be able to pick and choose from), then a multi-server fork of this repository exists here: https://github.com/robertmassaioli/factorio-multi-server-spot-pricing
+
 ## Prerequisites
 
 1. A basic understanding of Amazon Web Services.
