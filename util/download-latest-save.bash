@@ -7,12 +7,13 @@ if [ $# -ne 1 ]; then
 fi
 
 remote_name="$1"
+USE_REMOTE_NAME_ONLY=${USE_REMOTE_NAME_ONLY:-false}
 
 # Generate a human-readable timestamp
 timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
 
 # SSH into the remote instance to find the most recent save file
-ssh_output=$(ssh "ec2-user@$remote_name" << EOF
+ssh_output=$(ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "ec2-user@$remote_name" << EOF
     # Record the current directory
     current_dir=\$(pwd)
 
@@ -57,11 +58,17 @@ latest_file_path=$(echo "$ssh_output" | tail -n 1)
 # Extract just the filename
 latest_file=$(basename "$latest_file_path")
 
+# Set the new filename based on the USE_REMOTE_NAME_ONLY option
+if [ "$USE_REMOTE_NAME_ONLY" = true ]; then
+    new_filename="${remote_name}"
+else
+    new_filename="${remote_name}_${timestamp}_${latest_file}"
+fi
+
 # Download the file from the remote instance to the current local directory with the new filename
-new_filename="${remote_name}_${timestamp}_${latest_file}"
-scp "ec2-user@$remote_name:$latest_file_path" "./$new_filename"
+scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "ec2-user@$remote_name:$latest_file_path" "./$new_filename"
 
 # Clean up the temporary file on the remote instance
-ssh "ec2-user@$remote_name" "rm -f $latest_file_path"
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "ec2-user@$remote_name" "rm -f $latest_file_path"
 
 echo "Download complete. The latest save file has been saved as '$new_filename' in your current directory."
